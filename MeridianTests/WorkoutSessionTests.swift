@@ -56,6 +56,29 @@ struct WorkoutSessionTests {
         #expect(try ctx.fetch(FetchDescriptor<WorkoutSet>()).isEmpty)
     }
 
+    @Test("WorkoutSession with no exercises saves endedAt correctly")
+    func emptySessionEnds() throws {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: WorkoutSession.self, Exercise.self, WorkoutSet.self, configurations: config)
+        let ctx = ModelContext(container)
+
+        let session = WorkoutSession(
+            workoutType: "other",
+            workoutTypeDisplayName: "Other",
+            label: "",
+            startedAt: Date(timeIntervalSince1970: 0)
+        )
+        ctx.insert(session)
+
+        session.endedAt = Date(timeIntervalSince1970: 300)
+        try ctx.save()
+
+        let fetched = try ctx.fetch(FetchDescriptor<WorkoutSession>())
+        #expect(fetched[0].exercises.isEmpty)
+        #expect(fetched[0].endedAt != nil)
+        #expect(fetched[0].durationFormatted == "05:00")
+    }
+
     @Test("handleHeartRateSamples picks most-recent sample")
     func heartRateTakesMostRecent() {
         let now = Date()
