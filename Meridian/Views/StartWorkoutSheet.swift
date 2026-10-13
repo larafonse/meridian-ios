@@ -8,7 +8,6 @@ struct StartWorkoutSheet: View {
 
     let service: WorkoutSessionService
     @Binding var activeWorkout: WorkoutSession?
-    @Binding var showingActiveWorkout: Bool
 
     @State private var selectedType: WorkoutType = WorkoutType.all[0]
     @State private var label: String = ""
@@ -101,6 +100,5 @@ struct StartWorkoutSheet: View {
 
         activeWorkout = session
         dismiss()
-        showingActiveWorkout = true
     }
 }

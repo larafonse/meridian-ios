@@ -49,13 +49,20 @@ struct ActiveWorkoutView: View {
                                     .foregroundStyle(.blue)
                             }
                         } header: {
-                            Text(exercise.name)
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                            HStack {
+                                Text(exercise.name)
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                                Spacer()
+                                Button {
+                                    modelContext.delete(exercise)
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(.red)
+                                }
+                            }
                         }
-                    }
-                    .onDelete { offsets in
-                        deleteExercises(offsets, sortedExercises: sortedExercises)
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -140,12 +147,6 @@ struct ActiveWorkoutView: View {
         modelContext.insert(exercise)
         workout.exercises.append(exercise)
         newExerciseName = ""
-    }
-
-    private func deleteExercises(_ offsets: IndexSet, sortedExercises: [Exercise]) {
-        for i in offsets {
-            modelContext.delete(sortedExercises[i])
-        }
     }
 
     private func addSet(to exercise: Exercise) {

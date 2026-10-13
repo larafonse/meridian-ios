@@ -4,12 +4,17 @@ import Charts
 import UIKit
 
 struct DashboardView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \WeightEntry.recordedAt, order: .reverse) private var entries: [WeightEntry]
+    @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
     @State private var showingAddSheet = false
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
+    // activeWorkout is @State (not persisted). If the OS terminates the process while a
+    // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
+    // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
     @State private var activeWorkout: WorkoutSession? = nil
-    @State private var workoutService = WorkoutSessionService()
+    @StateObject private var workoutService = WorkoutSessionService()
 
     init() {
         let appearance = UINavigationBarAppearance()
@@ -57,14 +62,16 @@ struct DashboardView: View {
 
             addButton
         }
+        .onAppear { cleanupOrphanedSessions() }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
         }
-        .sheet(isPresented: $showingStartWorkout) {
+        .sheet(isPresented: $showingStartWorkout, onDismiss: {
+            if activeWorkout != nil { showingActiveWorkout = true }
+        }) {
             StartWorkoutSheet(
                 service: workoutService,
-                activeWorkout: $activeWorkout,
-                showingActiveWorkout: $showingActiveWorkout
+                activeWorkout: $activeWorkout
             )
         }
         .fullScreenCover(isPresented: $showingActiveWorkout) {
@@ -76,10 +83,16 @@ struct DashboardView: View {
                     onEnd: {
                         showingActiveWorkout = false
                         activeWorkout = nil
-                        workoutService = WorkoutSessionService()
+                        workoutService.reset()
                     }
                 )
             }
+        }
+    }
+
+    private func cleanupOrphanedSessions() {
+        for session in orphanedSessions {
+            modelContext.delete(session)
         }
     }
 

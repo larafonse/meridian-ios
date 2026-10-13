@@ -11,6 +11,13 @@ final class WorkoutSessionService: ObservableObject {
     private var hrQuery: HKAnchoredObjectQuery?
     private var workoutStartDate: Date?
 
+    func reset() {
+        stopHeartRateObserver()
+        builder = nil
+        workoutStartDate = nil
+        currentBPM = nil
+    }
+
     func start(configuration: HKWorkoutConfiguration) async throws {
         let startDate = Date()
         workoutStartDate = startDate
@@ -76,8 +83,7 @@ final class WorkoutSessionService: ObservableObject {
     private func handleHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample], !samples.isEmpty else { return }
         let latest = samples.max(by: { $0.endDate < $1.endDate })
-        let bpm = latest.map { Int($0.quantity.doubleValue(for: HKUnit(from: "count/min"))) }
-        Task { @MainActor in self.currentBPM = bpm }
+        currentBPM = latest.map { Int($0.quantity.doubleValue(for: HKUnit(from: "count/min"))) }
     }
 
     private func fetchHeartRateSamples(from start: Date, to end: Date) async -> [HKSample] {
