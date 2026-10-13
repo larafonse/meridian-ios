@@ -108,15 +108,3 @@ struct WorkoutTemplateTests {
     }
 }
 
-/// Pure pre-fill function — extracted for testability, mirrored in StartWorkoutSheet.
-func prefillSets(for templateExercise: TemplateExercise, lastSession: WorkoutSession?) -> [(reps: Int, weight: Double, unit: String)] {
-    if let last = lastSession,
-       let match = last.exercises.first(where: { $0.name.lowercased() == templateExercise.name.lowercased() }) {
-        let sorted = match.sets.sorted { $0.order < $1.order }
-        return sorted.map { (reps: $0.reps, weight: $0.weight, unit: $0.unit) }
-    } else if templateExercise.defaultReps != nil || templateExercise.defaultWeight != nil {
-        return [(reps: templateExercise.defaultReps ?? 0, weight: templateExercise.defaultWeight ?? 0, unit: templateExercise.defaultWeightUnit)]
-    } else {
-        return [(reps: 0, weight: 0, unit: "lbs")]
-    }
-}
