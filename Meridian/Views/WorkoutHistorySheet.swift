@@ -9,7 +9,7 @@ struct WorkoutHistorySheet: View {
 
     private var sessions: [WorkoutSession] {
         allSessions
-            .filter { $0.workoutType == workoutType && $0.endedAt != nil }
+            .filter { (workoutType == "__all__" || $0.workoutType == workoutType) && $0.endedAt != nil }
             .sorted { $0.startedAt > $1.startedAt }
     }
 

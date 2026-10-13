@@ -1,29 +1,114 @@
 import SwiftUI
 import SwiftData
+import HealthKit
+
+// A unified row item merging HealthKit workouts and local SwiftData sessions.
+struct WorkoutListItem: Identifiable {
+    let id: UUID
+    let displayName: String
+    let workoutType: String
+    let startedAt: Date
+    let duration: TimeInterval
+    let session: WorkoutSession?
+    let hkWorkout: HKWorkout?
+
+    var hasLog: Bool {
+        guard let s = session else { return false }
+        return !s.exercises.isEmpty
+    }
+
+    var durationFormatted: String {
+        let s = Int(duration)
+        return String(format: "%02d:%02d", s / 60, s % 60)
+    }
+
+    static func merge(sessions: [WorkoutSession], hkWorkouts: [HKWorkout]) -> [WorkoutListItem] {
+        var items: [WorkoutListItem] = []
+
+        // Index sessions by HK UUID for fast lookup
+        var sessionByHKUUID: [UUID: WorkoutSession] = [:]
+        var sessionsWithoutHK: [WorkoutSession] = []
+        for s in sessions {
+            if let uuid = s.healthKitUUID {
+                sessionByHKUUID[uuid] = s
+            } else {
+                sessionsWithoutHK.append(s)
+            }
+        }
+
+        // HK workouts (matched or unmatched)
+        for hk in hkWorkouts {
+            let matchedSession = sessionByHKUUID[hk.uuid]
+            items.append(WorkoutListItem(
+                id: hk.uuid,
+                displayName: hk.workoutActivityType.meridianDisplayName,
+                workoutType: String(hk.workoutActivityType.rawValue),
+                startedAt: hk.startDate,
+                duration: hk.duration,
+                session: matchedSession,
+                hkWorkout: hk
+            ))
+        }
+
+        // Meridian-only sessions (no HK backing — e.g. HK save failed)
+        for s in sessionsWithoutHK where s.endedAt != nil {
+            let duration = s.endedAt!.timeIntervalSince(s.startedAt)
+            items.append(WorkoutListItem(
+                id: s.id,
+                displayName: s.label.isEmpty ? s.workoutTypeDisplayName : s.label,
+                workoutType: s.workoutType,
+                startedAt: s.startedAt,
+                duration: duration,
+                session: s,
+                hkWorkout: nil
+            ))
+        }
+
+        return items.sorted { $0.startedAt > $1.startedAt }
+    }
+}
 
 struct ActivitiesCard: View {
     @Binding var activeWorkout: WorkoutSession?
     let onStart: () -> Void
     let onResume: () -> Void
 
-    @Query(
-        filter: #Predicate<WorkoutSession> { $0.endedAt != nil },
-        sort: \WorkoutSession.startedAt,
-        order: .reverse
-    ) private var recentSessions: [WorkoutSession]
+    @Query private var allSessions: [WorkoutSession]
+    @Environment(\.modelContext) private var modelContext
 
+    @State private var hkWorkouts: [HKWorkout] = []
+    @State private var selectedItem: WorkoutListItem? = nil
     @State private var historyWorkoutType: String? = nil
     @State private var historyDisplayName: String = ""
 
-    private var displaySessions: [WorkoutSession] {
-        Array(recentSessions.prefix(4))
+    private var mergedItems: [WorkoutListItem] {
+        WorkoutListItem.merge(sessions: allSessions, hkWorkouts: hkWorkouts)
+    }
+
+    private var displayItems: [WorkoutListItem] {
+        Array(mergedItems.prefix(5))
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Activities")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+            HStack {
+                Text("Activities")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+
+                Spacer()
+
+                if mergedItems.count > 5 {
+                    Button {
+                        historyWorkoutType = "__all__"
+                        historyDisplayName = "All Activities"
+                    } label: {
+                        Text("See All")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.blue)
+                    }
+                }
+            }
 
             if let active = activeWorkout {
                 Button(action: onResume) {
@@ -66,24 +151,36 @@ struct ActivitiesCard: View {
                 }
             }
 
-            if !displaySessions.isEmpty {
+            if !displayItems.isEmpty {
                 Divider()
 
                 VStack(spacing: 0) {
-                    ForEach(Array(displaySessions.enumerated()), id: \.element.id) { index, session in
-                        Button {
-                            historyWorkoutType = session.workoutType
-                            historyDisplayName = session.workoutTypeDisplayName
-                        } label: {
-                            SessionRow(session: session)
-                        }
-                        .buttonStyle(.plain)
+                    ForEach(Array(displayItems.enumerated()), id: \.element.id) { index, item in
+                        WorkoutItemRow(item: item)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedItem = item
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                if item.session != nil {
+                                    Button(role: .destructive) {
+                                        deleteSession(for: item)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                            }
 
-                        if index < displaySessions.count - 1 {
+                        if index < displayItems.count - 1 {
                             Divider()
                         }
                     }
                 }
+            } else if hkWorkouts.isEmpty {
+                Text("No recent workouts found.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 8)
             }
         }
         .padding(20)
@@ -93,6 +190,10 @@ struct ActivitiesCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
         )
+        .task { await loadHKWorkouts() }
+        .sheet(item: $selectedItem) { item in
+            WorkoutLogSheet(session: item.session, hkWorkout: item.hkWorkout)
+        }
         .sheet(isPresented: Binding(
             get: { historyWorkoutType != nil },
             set: { if !$0 { historyWorkoutType = nil } }
@@ -102,32 +203,47 @@ struct ActivitiesCard: View {
             }
         }
     }
+
+    // MARK: - HealthKit
+
+    private func loadHKWorkouts() async {
+        let service = HealthKitWorkoutService()
+        hkWorkouts = (try? await service.fetchRecentWorkouts()) ?? []
+    }
+
+    // MARK: - Delete
+
+    private func deleteSession(for item: WorkoutListItem) {
+        guard let session = item.session else { return }
+        modelContext.delete(session)
+        try? modelContext.save()
+    }
 }
 
-private struct SessionRow: View {
-    let session: WorkoutSession
+private struct WorkoutItemRow: View {
+    let item: WorkoutListItem
 
     var body: some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(session.workoutTypeDisplayName)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                if !session.label.isEmpty {
-                    Text(session.label)
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text(item.displayName)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                    if item.hasLog {
+                        Image(systemName: "note.text")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.blue)
+                    }
                 }
-            }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 3) {
-                Text(session.durationFormatted)
-                    .font(.system(size: 13, design: .monospaced))
-                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                Text(session.startedAt.formatted(date: .abbreviated, time: .omitted))
-                    .font(.system(size: 11))
+                Text(item.startedAt.formatted(date: .abbreviated, time: .omitted))
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
+            Spacer()
+            Text(item.durationFormatted)
+                .font(.system(size: 13, design: .monospaced))
+                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
         }
         .padding(.vertical, 10)
     }
