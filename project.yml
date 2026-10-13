@@ -1,0 +1,38 @@
+name: Meridian
+options:
+  bundleIdPrefix: com.meridian
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+settings:
+  SWIFT_VERSION: "6.0"
+targets:
+  Meridian:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Meridian
+    entitlements:
+      path: Meridian/Meridian.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.meridian.app
+      INFOPLIST_FILE: Meridian/Info.plist
+      DEVELOPMENT_TEAM: ""
+      TARGETED_DEVICE_FAMILY: "1,2"
+    scheme:
+      testTargets:
+        - MeridianTests
+  MeridianTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: MeridianTests
+    dependencies:
+      - target: Meridian
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.meridian.app.tests
+      GENERATE_INFOPLIST_FILE: YES

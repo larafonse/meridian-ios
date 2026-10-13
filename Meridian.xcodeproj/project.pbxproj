@@ -1,0 +1,498 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01CFAC71B126B34B1D960F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */; };
+		0F0ABBB1EF3E925EE1ABE470 /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104A827CA2C07D61DDEEEBC /* ActivityService.swift */; };
+		164F76B1A42D5642A5999E2A /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */; };
+		2A1F11AA91110C7E605272D9 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DB356B259500A68AF084EF /* DashboardView.swift */; };
+		361CFD3594C53CDAF7E2F8CA /* WeightStatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474AB5CC1511AE4E017700F /* WeightStatsTests.swift */; };
+		48DD701A2B01341D394AA68E /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E13733B259E96B49591F4A /* LogView.swift */; };
+		4AE3A5EDB251FDC5733EF7DC /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */; };
+		527913F7C21ADF3D966BB552 /* MeridianApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */; };
+		558EC968FA92791674E1990B /* AddEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */; };
+		9C1835907668617C8EE6ED4F /* ActivitySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E225A3C69661533A640C3540 /* ActivitySummaryTests.swift */; };
+		B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */; };
+		C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */; };
+		C8C380C45E31114950096E0B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2014C059C12A72AA1C0083D /* ContentView.swift */; };
+		CAC38E423557D8BBA874D8DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */; };
+		EDFFBF06047C8B84D1EDF876 /* PlayfairDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C3888A41B7FDCAB12EE0DA9 /* PlayfairDisplay-Regular.ttf */; };
+		FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B82395EF2A3509D357589C5 /* WeightStats.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		907D0B31C4CBF9A2C135BADB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EDC04DD90A5399D60F59D2D6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2682F6917222B9DDE8175A4E;
+			remoteInfo = Meridian;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0B82395EF2A3509D357589C5 /* WeightStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightStats.swift; sourceTree = "<group>"; };
+		5104A827CA2C07D61DDEEEBC /* ActivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityService.swift; sourceTree = "<group>"; };
+		5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		62DB356B259500A68AF084EF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntrySheet.swift; sourceTree = "<group>"; };
+		7FD3B907C34A780FED0255D7 /* Meridian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meridian.entitlements; sourceTree = "<group>"; };
+		8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRingsView.swift; sourceTree = "<group>"; };
+		8C3888A41B7FDCAB12EE0DA9 /* PlayfairDisplay-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlayfairDisplay-Regular.ttf"; sourceTree = "<group>"; };
+		9474AB5CC1511AE4E017700F /* WeightStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightStatsTests.swift; sourceTree = "<group>"; };
+		9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightEntry.swift; sourceTree = "<group>"; };
+		A03C88D06FDCA5AB98C1DB9B /* MeridianTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeridianTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C41A18C072EB83280908C1C6 /* Meridian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Meridian.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummary.swift; sourceTree = "<group>"; };
+		DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightChartView.swift; sourceTree = "<group>"; };
+		E225A3C69661533A640C3540 /* ActivitySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummaryTests.swift; sourceTree = "<group>"; };
+		E6E13733B259E96B49591F4A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeridianApp.swift; sourceTree = "<group>"; };
+		EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F2014C059C12A72AA1C0083D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F8D91AD1C2423A0DC7E039DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		437E4D52646EC28E8F14257C /* MeridianTests */ = {
+			isa = PBXGroup;
+			children = (
+				E225A3C69661533A640C3540 /* ActivitySummaryTests.swift */,
+				9474AB5CC1511AE4E017700F /* WeightStatsTests.swift */,
+			);
+			path = MeridianTests;
+			sourceTree = "<group>";
+		};
+		46C18C318C45ECB9034EB8F7 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				8C3888A41B7FDCAB12EE0DA9 /* PlayfairDisplay-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		7803CBE62EB976D9B793229A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C41A18C072EB83280908C1C6 /* Meridian.app */,
+				A03C88D06FDCA5AB98C1DB9B /* MeridianTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C903E344214AD02C4D3EE05 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A1A6AA01B88428C5A4B953DB /* Meridian */ = {
+			isa = PBXGroup;
+			children = (
+				5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */,
+				F8D91AD1C2423A0DC7E039DC /* Info.plist */,
+				7FD3B907C34A780FED0255D7 /* Meridian.entitlements */,
+				E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */,
+				46C18C318C45ECB9034EB8F7 /* Fonts */,
+				AE4A2BD072B57678271F3CD2 /* Helpers */,
+				EBB1D2E20EB1C00DD96283C5 /* Models */,
+				8C903E344214AD02C4D3EE05 /* Preview Content */,
+				FA528EED3D0C11680F0678A3 /* Views */,
+			);
+			path = Meridian;
+			sourceTree = "<group>";
+		};
+		AE4A2BD072B57678271F3CD2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				5104A827CA2C07D61DDEEEBC /* ActivityService.swift */,
+				D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */,
+				0B82395EF2A3509D357589C5 /* WeightStats.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		EBB1D2E20EB1C00DD96283C5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FA528EED3D0C11680F0678A3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */,
+				75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */,
+				F2014C059C12A72AA1C0083D /* ContentView.swift */,
+				62DB356B259500A68AF084EF /* DashboardView.swift */,
+				E6E13733B259E96B49591F4A /* LogView.swift */,
+				DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FEBFECAEA643DE58B0A3FDBC = {
+			isa = PBXGroup;
+			children = (
+				A1A6AA01B88428C5A4B953DB /* Meridian */,
+				437E4D52646EC28E8F14257C /* MeridianTests */,
+				7803CBE62EB976D9B793229A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2682F6917222B9DDE8175A4E /* Meridian */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0CB223B80553CCAAA0D2799 /* Build configuration list for PBXNativeTarget "Meridian" */;
+			buildPhases = (
+				23B3F5428B677948DDDE7EB9 /* Sources */,
+				D290A9B93AB6221E263EA9D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Meridian;
+			packageProductDependencies = (
+			);
+			productName = Meridian;
+			productReference = C41A18C072EB83280908C1C6 /* Meridian.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AB728FCE7E8F80133D3D2512 /* MeridianTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FF5836D034340BB17FB0FF7 /* Build configuration list for PBXNativeTarget "MeridianTests" */;
+			buildPhases = (
+				224270E65BEB3F3A63577516 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				061CDBD32F272ACCD7608BDF /* PBXTargetDependency */,
+			);
+			name = MeridianTests;
+			packageProductDependencies = (
+			);
+			productName = MeridianTests;
+			productReference = A03C88D06FDCA5AB98C1DB9B /* MeridianTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EDC04DD90A5399D60F59D2D6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 63DB0E1EF39921BE6B3BDE53 /* Build configuration list for PBXProject "Meridian" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = FEBFECAEA643DE58B0A3FDBC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7803CBE62EB976D9B793229A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2682F6917222B9DDE8175A4E /* Meridian */,
+				AB728FCE7E8F80133D3D2512 /* MeridianTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D290A9B93AB6221E263EA9D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CAC38E423557D8BBA874D8DF /* Assets.xcassets in Resources */,
+				EDFFBF06047C8B84D1EDF876 /* PlayfairDisplay-Regular.ttf in Resources */,
+				01CFAC71B126B34B1D960F27 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		224270E65BEB3F3A63577516 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C1835907668617C8EE6ED4F /* ActivitySummaryTests.swift in Sources */,
+				361CFD3594C53CDAF7E2F8CA /* WeightStatsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		23B3F5428B677948DDDE7EB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				164F76B1A42D5642A5999E2A /* ActivityRingsView.swift in Sources */,
+				0F0ABBB1EF3E925EE1ABE470 /* ActivityService.swift in Sources */,
+				4AE3A5EDB251FDC5733EF7DC /* ActivitySummary.swift in Sources */,
+				558EC968FA92791674E1990B /* AddEntrySheet.swift in Sources */,
+				C8C380C45E31114950096E0B /* ContentView.swift in Sources */,
+				2A1F11AA91110C7E605272D9 /* DashboardView.swift in Sources */,
+				48DD701A2B01341D394AA68E /* LogView.swift in Sources */,
+				527913F7C21ADF3D966BB552 /* MeridianApp.swift in Sources */,
+				C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */,
+				B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */,
+				FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		061CDBD32F272ACCD7608BDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2682F6917222B9DDE8175A4E /* Meridian */;
+			targetProxy = 907D0B31C4CBF9A2C135BADB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		098D76A360A80A1F53F6B382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Meridian/Meridian.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = TNXA6R4TQU;
+				INFOPLIST_FILE = Meridian/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridianwellness.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1D7C56CE50702AFDF407CF62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridian.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Meridian.app/Meridian";
+			};
+			name = Debug;
+		};
+		4EF46C0B3D29F328C45007A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		819C0BED3AE4B8A7D5D7301D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		97593FF510BCE382C9E34BC9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridian.app.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Meridian.app/Meridian";
+			};
+			name = Release;
+		};
+		FDCE4F5AEA6B0DAB1C90512E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Meridian/Meridian.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = TNXA6R4TQU;
+				INFOPLIST_FILE = Meridian/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridianwellness.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1FF5836D034340BB17FB0FF7 /* Build configuration list for PBXNativeTarget "MeridianTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D7C56CE50702AFDF407CF62 /* Debug */,
+				97593FF510BCE382C9E34BC9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		63DB0E1EF39921BE6B3BDE53 /* Build configuration list for PBXProject "Meridian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				819C0BED3AE4B8A7D5D7301D /* Debug */,
+				4EF46C0B3D29F328C45007A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A0CB223B80553CCAAA0D2799 /* Build configuration list for PBXNativeTarget "Meridian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDCE4F5AEA6B0DAB1C90512E /* Debug */,
+				098D76A360A80A1F53F6B382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EDC04DD90A5399D60F59D2D6 /* Project object */;
+}
