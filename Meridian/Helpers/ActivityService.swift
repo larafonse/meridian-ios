@@ -7,7 +7,8 @@ final class HealthKitActivityService: @unchecked Sendable {
         guard HKHealthStore.isHealthDataAvailable() else { return }
         let readTypes: Set<HKObjectType> = [
             HKObjectType.activitySummaryType(),
-            HKQuantityType(.heartRate)
+            HKQuantityType(.heartRate),
+            HKObjectType.workoutType()
         ]
         let writeTypes: Set<HKSampleType> = [
             HKObjectType.workoutType()
