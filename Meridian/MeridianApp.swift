@@ -8,6 +8,6 @@ struct MeridianApp: App {
             ContentView()
                 .preferredColorScheme(.light)
         }
-        .modelContainer(for: WeightEntry.self)
+        .modelContainer(for: [WeightEntry.self, WorkoutSession.self, Exercise.self, WorkoutSet.self])
     }
 }
