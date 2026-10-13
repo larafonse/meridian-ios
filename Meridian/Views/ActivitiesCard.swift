@@ -103,14 +103,15 @@ struct ActivitiesCard: View {
 
                 Spacer()
 
-                if mergedItems.count > 5 {
-                    Button {
-                        historyWorkoutType = "__all__"
-                        historyDisplayName = "All Activities"
-                    } label: {
-                        Text("See All")
-                            .font(.system(size: 13))
-                            .foregroundStyle(.blue)
+                if activeWorkout == nil {
+                    Button(action: onStart) {
+                        Label("Start Workout", systemImage: "plus")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color(red: 0.04, green: 0.04, blue: 0.04))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }
             }
@@ -143,16 +144,6 @@ struct ActivitiesCard: View {
                     .padding(12)
                     .background(Color(red: 0.961, green: 0.941, blue: 0.922))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-            } else {
-                Button(action: onStart) {
-                    Label("Start Workout", systemImage: "plus")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(Color(red: 0.04, green: 0.04, blue: 0.04))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
 
