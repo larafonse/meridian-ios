@@ -3,11 +3,20 @@ import HealthKit
 final class HealthKitWorkoutService: @unchecked Sendable {
     private let store = HKHealthStore()
 
+    func fetchTodayWorkouts() async throws -> [HKWorkout] {
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        return try await fetchWorkouts(from: startOfDay, limit: HKObjectQueryNoLimit)
+    }
+
     func fetchRecentWorkouts(limit: Int = 30) async throws -> [HKWorkout] {
+        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
+        return try await fetchWorkouts(from: thirtyDaysAgo, limit: limit)
+    }
+
+    private func fetchWorkouts(from startDate: Date, limit: Int) async throws -> [HKWorkout] {
         guard HKHealthStore.isHealthDataAvailable() else { return [] }
         let workoutType = HKObjectType.workoutType()
-        let thirtyDaysAgo = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
-        let predicate = HKQuery.predicateForSamples(withStart: thirtyDaysAgo, end: nil, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: .strictStartDate)
         let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
 
         return try await withCheckedThrowingContinuation { continuation in

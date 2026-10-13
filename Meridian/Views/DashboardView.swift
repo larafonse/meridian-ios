@@ -40,6 +40,12 @@ struct DashboardView: View {
 
                     ActivityRingsWidget()
 
+                    ActivitiesCard(
+                        activeWorkout: $activeWorkout,
+                        onStart: { showingStartWorkout = true },
+                        onResume: { showingActiveWorkout = true }
+                    )
+
                     WeightChartView(entries: entries)
                         .padding(20)
                         .background(Color.white)
@@ -48,12 +54,6 @@ struct DashboardView: View {
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
                         )
-
-                    ActivitiesCard(
-                        activeWorkout: $activeWorkout,
-                        onStart: { showingStartWorkout = true },
-                        onResume: { showingActiveWorkout = true }
-                    )
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)

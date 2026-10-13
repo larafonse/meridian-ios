@@ -81,8 +81,13 @@ struct ActivitiesCard: View {
     @State private var historyWorkoutType: String? = nil
     @State private var historyDisplayName: String = ""
 
+    private var todaySessions: [WorkoutSession] {
+        let start = Calendar.current.startOfDay(for: Date())
+        return allSessions.filter { $0.endedAt != nil && $0.startedAt >= start }
+    }
+
     private var mergedItems: [WorkoutListItem] {
-        WorkoutListItem.merge(sessions: allSessions, hkWorkouts: hkWorkouts)
+        WorkoutListItem.merge(sessions: todaySessions, hkWorkouts: hkWorkouts)
     }
 
     private var displayItems: [WorkoutListItem] {
@@ -208,7 +213,7 @@ struct ActivitiesCard: View {
 
     private func loadHKWorkouts() async {
         let service = HealthKitWorkoutService()
-        hkWorkouts = (try? await service.fetchRecentWorkouts()) ?? []
+        hkWorkouts = (try? await service.fetchTodayWorkouts()) ?? []
     }
 
     // MARK: - Delete
