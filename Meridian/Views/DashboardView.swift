@@ -55,7 +55,7 @@ struct DashboardView: View {
                                 RoundedRectangle(cornerRadius: 16)
                                     .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
                             )
-                            .frame(maxWidth: UIScreen.main.bounds.width / 3)
+                            .frame(maxWidth: UIScreen.main.bounds.width / 2)
                         Spacer()
                     }
                 }
