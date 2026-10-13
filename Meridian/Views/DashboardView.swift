@@ -6,6 +6,10 @@ import UIKit
 struct DashboardView: View {
     @Query(sort: \WeightEntry.recordedAt, order: .reverse) private var entries: [WeightEntry]
     @State private var showingAddSheet = false
+    @State private var showingStartWorkout = false
+    @State private var showingActiveWorkout = false
+    @State private var activeWorkout: WorkoutSession? = nil
+    @State private var workoutService = WorkoutSessionService()
 
     init() {
         let appearance = UINavigationBarAppearance()
@@ -39,6 +43,12 @@ struct DashboardView: View {
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
                         )
+
+                    ActivitiesCard(
+                        activeWorkout: $activeWorkout,
+                        onStart: { showingStartWorkout = true },
+                        onResume: { showingActiveWorkout = true }
+                    )
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -49,6 +59,27 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
+        }
+        .sheet(isPresented: $showingStartWorkout) {
+            StartWorkoutSheet(
+                service: workoutService,
+                activeWorkout: $activeWorkout,
+                showingActiveWorkout: $showingActiveWorkout
+            )
+        }
+        .fullScreenCover(isPresented: $showingActiveWorkout) {
+            if let workout = activeWorkout {
+                ActiveWorkoutView(
+                    workout: workout,
+                    service: workoutService,
+                    onMinimize: { showingActiveWorkout = false },
+                    onEnd: {
+                        showingActiveWorkout = false
+                        activeWorkout = nil
+                        workoutService = WorkoutSessionService()
+                    }
+                )
+            }
         }
     }
 
