@@ -101,7 +101,7 @@ final class WorkoutSessionService: ObservableObject {
 
 // MARK: - WorkoutType catalogue
 
-struct WorkoutType: Identifiable {
+struct WorkoutType: Identifiable, Hashable {
     let id: String
     let displayName: String
     let symbol: String
