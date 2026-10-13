@@ -5,8 +5,14 @@ final class HealthKitActivityService: @unchecked Sendable {
 
     func requestAuthorization() async throws {
         guard HKHealthStore.isHealthDataAvailable() else { return }
-        let types: Set<HKObjectType> = [HKObjectType.activitySummaryType()]
-        try await store.requestAuthorization(toShare: [], read: types)
+        let readTypes: Set<HKObjectType> = [
+            HKObjectType.activitySummaryType(),
+            HKQuantityType(.heartRate)
+        ]
+        let writeTypes: Set<HKSampleType> = [
+            HKObjectType.workoutType()
+        ]
+        try await store.requestAuthorization(toShare: writeTypes, read: readTypes)
     }
 
     func fetchTodaySummary() async throws -> ActivitySummary? {

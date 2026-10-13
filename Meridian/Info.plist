@@ -18,6 +18,8 @@
 	<string>1</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Meridian reads your Move, Exercise, and Stand ring progress so you can see your activity without opening the Fitness app.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Meridian saves your workouts to Apple Health so they appear in the Fitness app.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PlayfairDisplay-Regular.ttf</string>

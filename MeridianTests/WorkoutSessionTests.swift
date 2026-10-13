@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 import SwiftData
+import HealthKit
 @testable import Meridian
 
 @Suite("WorkoutSession model")
@@ -53,6 +54,22 @@ struct WorkoutSessionTests {
 
         #expect(try ctx.fetch(FetchDescriptor<Exercise>()).isEmpty)
         #expect(try ctx.fetch(FetchDescriptor<WorkoutSet>()).isEmpty)
+    }
+
+    @Test("handleHeartRateSamples picks most-recent sample")
+    func heartRateTakesMostRecent() {
+        let now = Date()
+        let earlier = now.addingTimeInterval(-30)
+
+        let hrType = HKQuantityType(.heartRate)
+        let unit = HKUnit(from: "count/min")
+
+        let oldSample = HKQuantitySample(type: hrType, quantity: HKQuantity(unit: unit, doubleValue: 60), start: earlier, end: earlier)
+        let newSample = HKQuantitySample(type: hrType, quantity: HKQuantity(unit: unit, doubleValue: 90), start: now, end: now)
+
+        let samples: [HKQuantitySample] = [oldSample, newSample]
+        let latest = samples.max(by: { $0.endDate < $1.endDate })
+        #expect(Int(latest!.quantity.doubleValue(for: unit)) == 90)
     }
 
     @Test("durationFormatted returns MM:SS when endedAt is set")
