@@ -26,7 +26,7 @@ struct WeightChartView: View {
                     .frame(maxWidth: .infinity, minHeight: 160, alignment: .center)
             } else {
                 chart
-                    .frame(height: 200)
+                    .frame(height: 80)
             }
         }
     }
@@ -44,11 +44,11 @@ struct WeightChartView: View {
     private func statItem(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(label)
-                .font(.system(size: 10, weight: .semibold))
+                .font(.system(size: 8, weight: .semibold))
                 .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.50))
                 .tracking(0.4)
             Text(value)
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)

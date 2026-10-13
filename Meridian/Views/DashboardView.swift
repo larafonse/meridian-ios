@@ -46,14 +46,18 @@ struct DashboardView: View {
                         onResume: { showingActiveWorkout = true }
                     )
 
-                    WeightChartView(entries: entries)
-                        .padding(20)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
-                        )
+                    HStack {
+                        WeightChartView(entries: entries)
+                            .padding(12)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+                            )
+                            .frame(maxWidth: UIScreen.main.bounds.width / 3)
+                        Spacer()
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
