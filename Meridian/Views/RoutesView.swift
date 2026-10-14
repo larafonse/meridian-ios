@@ -1,5 +1,7 @@
 import SwiftUI
 import HealthKit
+import MapKit
+import CoreLocation
 
 extension HKWorkoutActivityType {
     var isGPSTracked: Bool {
@@ -11,11 +13,11 @@ extension HKWorkoutActivityType {
 }
 
 struct RoutesView: View {
-    @State private var workouts: [HKWorkout] = []
+    @State private var allCoordinates: [[CLLocationCoordinate2D]] = []
     @State private var isLoading = true
-    @State private var selectedWorkout: HKWorkout?
 
     private let workoutService = HealthKitWorkoutService()
+    private let routeService = WorkoutRouteService()
 
     var body: some View {
         NavigationStack {
@@ -23,15 +25,7 @@ struct RoutesView: View {
                 .navigationTitle("Routes")
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .task { await loadWorkouts() }
-        .sheet(isPresented: Binding(
-            get: { selectedWorkout != nil },
-            set: { if !$0 { selectedWorkout = nil } }
-        )) {
-            if let workout = selectedWorkout {
-                WorkoutRouteMapView(workoutUUID: workout.uuid)
-            }
-        }
+        .task { await loadAllRoutes() }
     }
 
     @ViewBuilder
@@ -39,56 +33,36 @@ struct RoutesView: View {
         if isLoading {
             ProgressView("Loading routes…")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if workouts.isEmpty {
+        } else if allCoordinates.isEmpty {
             ContentUnavailableView(
                 "No Routes",
                 systemImage: "map",
                 description: Text("GPS workouts from your Apple Watch will appear here.")
             )
         } else {
-            List(workouts, id: \.uuid) { workout in
-                Button {
-                    selectedWorkout = workout
-                } label: {
-                    WorkoutRouteRow(workout: workout)
+            let flat = allCoordinates.flatMap { $0 }
+            Map(initialPosition: .region(routeMapRegion(for: flat))) {
+                ForEach(allCoordinates.indices, id: \.self) { i in
+                    MapPolyline(coordinates: allCoordinates[i])
+                        .stroke(Color.accentColor.opacity(0.8), lineWidth: 2)
                 }
-                .buttonStyle(.plain)
             }
-            .listStyle(.insetGrouped)
+            .ignoresSafeArea(edges: .bottom)
         }
     }
 
-    private func loadWorkouts() async {
+    private func loadAllRoutes() async {
         defer { isLoading = false }
-        let all = (try? await workoutService.fetchRecentWorkouts(limit: 50)) ?? []
-        workouts = all.filter { $0.workoutActivityType.isGPSTracked }
-    }
-}
+        let workouts = (try? await workoutService.fetchRecentWorkouts(limit: 50)) ?? []
+        let gpsWorkouts = workouts.filter { $0.workoutActivityType.isGPSTracked }
 
-struct WorkoutRouteRow: View {
-    let workout: HKWorkout
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(workout.workoutActivityType.meridianDisplayName)
-                    .font(.system(size: 15, weight: .semibold))
-                Text(workout.startDate.formatted(date: .abbreviated, time: .shortened))
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
+        await withTaskGroup(of: [CLLocationCoordinate2D].self) { group in
+            for workout in gpsWorkouts {
+                group.addTask { await self.routeService.fetchRoute(for: workout) }
             }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 4) {
-                if let distance = workout.totalDistance {
-                    let km = distance.doubleValue(for: .meterUnit(with: .kilo))
-                    Text(String(format: "%.1f km", km))
-                        .font(.system(size: 13, weight: .medium))
-                }
-                Text(formatRouteDuration(workout.duration))
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundStyle(.secondary)
+            for await coords in group where !coords.isEmpty {
+                allCoordinates.append(coords)
             }
         }
-        .padding(.vertical, 4)
     }
 }
