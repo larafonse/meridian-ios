@@ -14,6 +14,7 @@ extension HKWorkoutActivityType {
 
 struct RoutesView: View {
     @State private var sync = RouteSyncService()
+    @State private var locationManager = CLLocationManager()
 
     var body: some View {
         NavigationStack {
@@ -21,7 +22,10 @@ struct RoutesView: View {
                 .navigationTitle("Routes")
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .task { await sync.sync() }
+        .task {
+            locationManager.requestWhenInUseAuthorization()
+            await sync.sync()
+        }
     }
 
     @ViewBuilder

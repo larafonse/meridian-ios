@@ -9,13 +9,15 @@ final class RouteSyncService {
     private(set) var allCoordinates: [[CLLocationCoordinate2D]] = []
     private(set) var isSyncing = false
     private(set) var syncProgress: (fetched: Int, total: Int) = (0, 0)
+    private var hasSynced = false
 
     private let cache = RouteCache()
     private let workoutService = HealthKitWorkoutService()
     private let routeService = WorkoutRouteService()
 
     func sync() async {
-        guard !isSyncing else { return }
+        guard !isSyncing, !hasSynced else { return }
+        hasSynced = true
 
         // 1. Load from cache immediately so the map renders before any HealthKit call.
         let cachedUUIDs = cache.cachedUUIDs()
