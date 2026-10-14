@@ -91,13 +91,11 @@ struct WeightChartView: View {
         .chartXAxis {
             AxisMarks(values: .automatic(desiredCount: 3)) { _ in
                 AxisGridLine().foregroundStyle(Color(red: 0.898, green: 0.898, blue: 0.898))
-                AxisValueLabel(format: .dateTime.month(.abbreviated).day())
-                    .font(.system(size: 10))
-                    .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.50))
             }
         }
         .chartXScale(domain: {
-            let start = lineData.first?.recordedAt ?? .now
+            let first = lineData.first?.recordedAt ?? .now
+            let start = Calendar.current.date(byAdding: .day, value: -3, to: first) ?? first
             let last = lineData.last?.recordedAt ?? .now
             let end = Calendar.current.date(byAdding: .day, value: 1, to: last) ?? last
             return start...end
@@ -111,9 +109,6 @@ struct WeightChartView: View {
         .chartYAxis {
             AxisMarks(values: .automatic(desiredCount: 3)) { _ in
                 AxisGridLine().foregroundStyle(Color(red: 0.898, green: 0.898, blue: 0.898))
-                AxisValueLabel()
-                    .font(.system(size: 10))
-                    .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.50))
             }
         }
         .chartOverlay { proxy in
