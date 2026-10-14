@@ -10,6 +10,7 @@
 		01CFAC71B126B34B1D960F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */; };
 		0DB38CEF5116B41755169122 /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */; };
 		0F0ABBB1EF3E925EE1ABE470 /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104A827CA2C07D61DDEEEBC /* ActivityService.swift */; };
+		10A064C0A03686EC86C04ED9 /* RouteSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73EFB0BADE44BAB86B9B774F /* RouteSyncService.swift */; };
 		164F76B1A42D5642A5999E2A /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */; };
 		1BA2A49D456143003F25EBB3 /* WorkoutRouteMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C53A980CDB983A9C2D220 /* WorkoutRouteMapViewTests.swift */; };
 		1D74A1325B0AC924B8D859B7 /* TemplateEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C33262722FB70FAFD5880BC /* TemplateEditorSheet.swift */; };
@@ -69,6 +70,7 @@
 		5E03E0B2B56607172C42B3EF /* RouteCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCacheTests.swift; sourceTree = "<group>"; };
 		62DB356B259500A68AF084EF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteService.swift; sourceTree = "<group>"; };
+		73EFB0BADE44BAB86B9B774F /* RouteSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSyncService.swift; sourceTree = "<group>"; };
 		75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntrySheet.swift; sourceTree = "<group>"; };
 		7FD3B907C34A780FED0255D7 /* Meridian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meridian.entitlements; sourceTree = "<group>"; };
 		837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListSheet.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */,
 				DC9B37070A2403A9F033391E /* HealthKitWorkoutService.swift */,
 				DEFE9F51A42E63F758EE2022 /* RouteCache.swift */,
+				73EFB0BADE44BAB86B9B774F /* RouteSyncService.swift */,
 				0B82395EF2A3509D357589C5 /* WeightStats.swift */,
 				6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */,
 				87E23E3F84AECBE3EB5C10E5 /* WorkoutSessionService.swift */,
@@ -326,6 +329,7 @@
 				48DD701A2B01341D394AA68E /* LogView.swift in Sources */,
 				527913F7C21ADF3D966BB552 /* MeridianApp.swift in Sources */,
 				77560F23DA31FA0934CCCDB6 /* RouteCache.swift in Sources */,
+				10A064C0A03686EC86C04ED9 /* RouteSyncService.swift in Sources */,
 				6113CD354C4367C438947EA9 /* RoutesView.swift in Sources */,
 				ED3DBE17EF2DF11B8444B5F7 /* StartWorkoutSheet.swift in Sources */,
 				1D74A1325B0AC924B8D859B7 /* TemplateEditorSheet.swift in Sources */,
