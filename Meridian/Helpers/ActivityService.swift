@@ -14,15 +14,7 @@ final class HealthKitActivityService: @unchecked Sendable {
             HKQuantityType(.stepCount),
             HKQuantityType(.distanceWalkingRunning)
         ]
-        let writeTypes: Set<HKSampleType> = [
-            HKObjectType.workoutType(),
-            HKSeriesType.workoutRoute(),
-            HKQuantityType(.activeEnergyBurned),
-            HKQuantityType(.distanceWalkingRunning),
-            HKQuantityType(.distanceCycling),
-            HKQuantityType(.heartRate)
-        ]
-        try await store.requestAuthorization(toShare: writeTypes, read: readTypes)
+        try await store.requestAuthorization(toShare: [], read: readTypes)
     }
 
     func fetchTodayStepsAndDistance() async throws -> (steps: Int, distanceMeters: Double) {
