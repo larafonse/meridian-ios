@@ -15,6 +15,7 @@ extension HKWorkoutActivityType {
 struct RoutesView: View {
     @State private var sync = RouteSyncService()
     @State private var locationManager = CLLocationManager()
+    @State private var cameraPosition: MapCameraPosition = .userLocation(followsHeading: false, fallback: .automatic)
 
     var body: some View {
         NavigationStack {
@@ -40,9 +41,8 @@ struct RoutesView: View {
                 description: Text("GPS workouts from your Apple Watch will appear here.")
             )
         } else {
-            let flat = sync.allCoordinates.flatMap { $0 }
             ZStack(alignment: .top) {
-                Map(initialPosition: .userLocation(fallback: .region(routeMapRegion(for: flat)))) {
+                Map(position: $cameraPosition) {
                     ForEach(sync.allCoordinates.indices, id: \.self) { i in
                         MapPolyline(coordinates: sync.allCoordinates[i])
                             .stroke(Color.accentColor.opacity(0.8), lineWidth: 2)
