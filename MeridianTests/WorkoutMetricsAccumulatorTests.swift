@@ -45,35 +45,36 @@ struct WorkoutMetricsAccumulatorTests {
         #expect(acc.distanceMeters == 0)
     }
 
-    // MARK: - Calories (HR-based)
+    // MARK: - Calories (time-based)
 
-    @Test("HR-based calories accumulate over time")
-    @MainActor func hrCaloriesAccumulate() {
+    @Test("HR-based calories accumulate over time via tick")
+    @MainActor func hrCaloriesAccumulateViaTick() {
         let acc = WorkoutMetricsAccumulator(
             activityType: .running,
             bodyMassKg: 75, ageYears: 30, isMale: true
         )
         let t0 = Date(timeIntervalSince1970: 0)
         let t1 = Date(timeIntervalSince1970: 60) // 1 minute later
-        acc.addHeartRateSample(bpm: 150, at: t0)
-        acc.addHeartRateSample(bpm: 150, at: t1)
+        acc.updateHeartRate(bpm: 150)
+        acc.tick(at: t0)  // initialises clock
+        acc.tick(at: t1)  // accumulates 1 min at 150 bpm
         // Keytel male: (-55.0969 + 0.6309*150 + 0.1988*75 + 0.2017*30) / 4.184 ≈ 13.8 kcal/min
         #expect(acc.activeCalories > 10 && acc.activeCalories < 20)
     }
 
-    @Test("first HR sample initialises clock without adding calories")
-    @MainActor func firstSampleNonAdditive() {
+    @Test("first tick initialises clock without adding calories")
+    @MainActor func firstTickNonAdditive() {
         let acc = WorkoutMetricsAccumulator(
             activityType: .running,
             bodyMassKg: 75, ageYears: 30, isMale: true
         )
-        acc.addHeartRateSample(bpm: 150, at: Date())
+        acc.tick(at: Date())
         #expect(acc.activeCalories == 0)
     }
 
     // MARK: - MET fallback
 
-    @Test("MET fallback fires when body mass is nil")
+    @Test("MET fallback accumulates calories when no body mass provided")
     @MainActor func metFallbackWhenNoBodyMass() {
         let acc = WorkoutMetricsAccumulator(
             activityType: .walking,
@@ -81,8 +82,8 @@ struct WorkoutMetricsAccumulatorTests {
         )
         let t0 = Date(timeIntervalSince1970: 0)
         let t1 = Date(timeIntervalSince1970: 60)
-        acc.addHeartRateSample(bpm: 100, at: t0)
-        acc.addHeartRateSample(bpm: 100, at: t1)
+        acc.tick(at: t0)
+        acc.tick(at: t1)
         // MET fallback: 3.5 * 70 / 60 ≈ 4.08 kcal/min
         #expect(acc.activeCalories > 2 && acc.activeCalories < 8)
     }
@@ -95,8 +96,9 @@ struct WorkoutMetricsAccumulatorTests {
         )
         let t0 = Date(timeIntervalSince1970: 0)
         let t1 = Date(timeIntervalSince1970: 60)
-        acc.addHeartRateSample(bpm: 150, at: t0)
-        acc.addHeartRateSample(bpm: 150, at: t1)
+        acc.updateHeartRate(bpm: 150)
+        acc.tick(at: t0)
+        acc.tick(at: t1)
         acc.reset()
         #expect(acc.activeCalories == 0)
     }

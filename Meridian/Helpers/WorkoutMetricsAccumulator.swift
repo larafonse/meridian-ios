@@ -13,7 +13,8 @@ final class WorkoutMetricsAccumulator: ObservableObject {
     private let isMale: Bool?
 
     private var lastLocation: CLLocation?
-    private var lastCalorieDate: Date?
+    private var lastTickDate: Date?
+    private var lastKnownBPM: Int?
 
     init(activityType: HKWorkoutActivityType, bodyMassKg: Double?, ageYears: Int?, isMale: Bool?) {
         self.activityType = activityType
@@ -32,29 +33,37 @@ final class WorkoutMetricsAccumulator: ObservableObject {
         }
     }
 
-    func addHeartRateSample(bpm: Int, at date: Date) {
-        guard let lastDate = lastCalorieDate else {
-            lastCalorieDate = date
+    /// Call when a new HR reading arrives. Stored for use in the next tick.
+    func updateHeartRate(bpm: Int) {
+        lastKnownBPM = bpm
+    }
+
+    /// Call every second from the workout timer to accumulate calories.
+    /// Uses Keytel HR-based formula when HR is available, MET fallback otherwise.
+    func tick(at date: Date) {
+        guard let last = lastTickDate else {
+            lastTickDate = date
             return
         }
-        let minutes = date.timeIntervalSince(lastDate) / 60.0
+        let minutes = date.timeIntervalSince(last) / 60.0
         guard minutes > 0 else { return }
-        activeCalories += max(0, caloriesPerMinute(bpm: bpm) * minutes)
-        lastCalorieDate = date
+        activeCalories += max(0, caloriesPerMinute() * minutes)
+        lastTickDate = date
     }
 
     func reset() {
         distanceMeters = 0
         activeCalories = 0
         lastLocation = nil
-        lastCalorieDate = nil
+        lastTickDate = nil
+        lastKnownBPM = nil
     }
 
     // MARK: - Calorie calculation
 
-    private func caloriesPerMinute(bpm: Int) -> Double {
+    private func caloriesPerMinute() -> Double {
         let kg = bodyMassKg ?? 70.0
-        if let age = ageYears, let male = isMale, bodyMassKg != nil {
+        if let bpm = lastKnownBPM, let age = ageYears, let male = isMale, bodyMassKg != nil {
             return male
                 ? (-55.0969 + 0.6309 * Double(bpm) + 0.1988 * kg + 0.2017 * Double(age)) / 4.184
                 : (-20.4022 + 0.4472 * Double(bpm) - 0.1263 * kg + 0.074  * Double(age)) / 4.184

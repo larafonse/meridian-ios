@@ -17,7 +17,8 @@ final class HealthKitActivityService: @unchecked Sendable {
             HKSeriesType.workoutRoute(),
             HKQuantityType(.activeEnergyBurned),
             HKQuantityType(.distanceWalkingRunning),
-            HKQuantityType(.distanceCycling)
+            HKQuantityType(.distanceCycling),
+            HKQuantityType(.heartRate)
         ]
         try await store.requestAuthorization(toShare: writeTypes, read: readTypes)
     }

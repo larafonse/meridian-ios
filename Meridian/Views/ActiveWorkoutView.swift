@@ -131,7 +131,9 @@ struct ActiveWorkoutView: View {
     private func startTimer() {
         elapsed = Date().timeIntervalSince(workout.startedAt)
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            elapsed = Date().timeIntervalSince(workout.startedAt)
+            let now = Date()
+            elapsed = now.timeIntervalSince(workout.startedAt)
+            service.metrics?.tick(at: now)
         }
     }
 
