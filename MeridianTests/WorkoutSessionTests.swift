@@ -2,6 +2,7 @@ import Testing
 import Foundation
 import SwiftData
 import HealthKit
+import CoreLocation
 @testable import Meridian
 
 @Suite("WorkoutSession model")
@@ -107,5 +108,18 @@ struct WorkoutSessionTests {
         )
         session.endedAt = end
         #expect(session.durationFormatted == "45:32")
+    }
+
+    @Test("validLocations filters out readings with non-positive horizontal accuracy")
+    func validLocationsFiltersInaccurateReadings() {
+        let coord = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+        let good = CLLocation(coordinate: coord, altitude: 0, horizontalAccuracy: 5, verticalAccuracy: 5, timestamp: Date())
+        let invalid = CLLocation(coordinate: coord, altitude: 0, horizontalAccuracy: -1, verticalAccuracy: 5, timestamp: Date())
+        let zero = CLLocation(coordinate: coord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 5, timestamp: Date())
+
+        let result = WorkoutSessionService.validLocations([good, invalid, zero])
+
+        #expect(result.count == 1)
+        #expect(result[0].horizontalAccuracy == 5)
     }
 }

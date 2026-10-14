@@ -1,9 +1,10 @@
 import Foundation
 import HealthKit
+import CoreLocation
 import Combine
 
 @MainActor
-final class WorkoutSessionService: ObservableObject {
+final class WorkoutSessionService: NSObject, ObservableObject {
     @Published var currentBPM: Int? = nil
 
     private let store = HKHealthStore()
@@ -11,11 +12,20 @@ final class WorkoutSessionService: ObservableObject {
     private var hrQuery: HKAnchoredObjectQuery?
     private var workoutStartDate: Date?
 
+    private var locationManager: CLLocationManager?
+    private var routeBuilder: HKWorkoutRouteBuilder?
+
+    nonisolated static func validLocations(_ locations: [CLLocation]) -> [CLLocation] {
+        locations.filter { $0.horizontalAccuracy > 0 }
+    }
+
     func reset() {
         stopHeartRateObserver()
+        stopLocationTracking()
         builder = nil
         workoutStartDate = nil
         currentBPM = nil
+        routeBuilder = nil
     }
 
     func start(configuration: HKWorkoutConfiguration) async throws {
@@ -25,6 +35,9 @@ final class WorkoutSessionService: ObservableObject {
         self.builder = builder
         try await builder.beginCollection(at: startDate)
         startHeartRateObserver(from: startDate)
+        if configuration.activityType.isGPSTracked {
+            startLocationTracking()
+        }
     }
 
     /// Returns the saved HKWorkout UUID, or nil if HealthKit write fails.
@@ -33,6 +46,7 @@ final class WorkoutSessionService: ObservableObject {
         guard let builder else { return nil }
 
         stopHeartRateObserver()
+        stopLocationTracking()
 
         if let start = workoutStartDate {
             let hrSamples = await fetchHeartRateSamples(from: start, to: endDate)
@@ -44,14 +58,37 @@ final class WorkoutSessionService: ObservableObject {
         do {
             try await builder.endCollection(at: endDate)
             let workout = try await builder.finishWorkout()
+            if let workout, let routeBuilder {
+                _ = try? await routeBuilder.finishRoute(with: workout, metadata: nil)
+            }
             self.builder = nil
+            self.routeBuilder = nil
             workoutStartDate = nil
             return workout?.uuid
         } catch {
             self.builder = nil
+            self.routeBuilder = nil
             workoutStartDate = nil
             return nil
         }
+    }
+
+    // MARK: - GPS
+
+    private func startLocationTracking() {
+        routeBuilder = HKWorkoutRouteBuilder(healthStore: store, device: nil)
+        let manager = CLLocationManager()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.distanceFilter = 10
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+        locationManager = manager
+    }
+
+    private func stopLocationTracking() {
+        locationManager?.stopUpdatingLocation()
+        locationManager = nil
     }
 
     // MARK: - Heart Rate
@@ -95,6 +132,18 @@ final class WorkoutSessionService: ObservableObject {
                 continuation.resume(returning: samples ?? [])
             }
             store.execute(query)
+        }
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension WorkoutSessionService: CLLocationManagerDelegate {
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let valid = WorkoutSessionService.validLocations(locations)
+        guard !valid.isEmpty else { return }
+        Task { @MainActor [weak self] in
+            try? await self?.routeBuilder?.insertRouteData(valid)
         }
     }
 }

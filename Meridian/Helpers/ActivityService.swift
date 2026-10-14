@@ -12,7 +12,8 @@ final class HealthKitActivityService: @unchecked Sendable {
             HKSeriesType.workoutRoute()
         ]
         let writeTypes: Set<HKSampleType> = [
-            HKObjectType.workoutType()
+            HKObjectType.workoutType(),
+            HKSeriesType.workoutRoute()
         ]
         try await store.requestAuthorization(toShare: writeTypes, read: readTypes)
     }
