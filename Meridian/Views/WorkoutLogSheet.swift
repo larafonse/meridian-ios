@@ -14,6 +14,8 @@ struct WorkoutLogSheet: View {
     @State private var newExerciseName: String = ""
     @State private var showingAddExercise = false
     @State private var showingTemplatePicker = false
+    @State private var showingHKPicker = false
+    @State private var hkWorkoutsForPicker: [HKWorkout] = []
 
     private var displayName: String {
         if let s = workingSession {
@@ -110,6 +112,14 @@ struct WorkoutLogSheet: View {
                         } label: {
                             Label("Add from template", systemImage: "list.bullet.rectangle")
                         }
+                        if workingSession != nil && workingSession?.healthKitUUID == nil {
+                            Button {
+                                loadHKWorkoutsForPicker()
+                                showingHKPicker = true
+                            } label: {
+                                Label("Link to Watch workout", systemImage: "applewatch")
+                            }
+                        }
                     } label: {
                         Label("Add Exercise", systemImage: "plus.circle.fill")
                     }
@@ -130,6 +140,12 @@ struct WorkoutLogSheet: View {
                 TemplatePickerSheet { template in
                     addExercises(from: template)
                     showingTemplatePicker = false
+                }
+            }
+            .sheet(isPresented: $showingHKPicker) {
+                HKWorkoutPickerSheet(workouts: hkWorkoutsForPicker) { selected in
+                    linkSession(to: selected)
+                    showingHKPicker = false
                 }
             }
         }
@@ -197,6 +213,22 @@ struct WorkoutLogSheet: View {
             ws.exercises.append(exercise)
         }
     }
+
+    private func loadHKWorkoutsForPicker() {
+        Task {
+            hkWorkoutsForPicker = (try? await HealthKitWorkoutService().fetchRecentWorkouts(limit: 20)) ?? []
+        }
+    }
+
+    private func linkSession(to hkWorkout: HKWorkout) {
+        guard let session = workingSession else { return }
+        session.healthKitUUID = hkWorkout.uuid
+        session.activeCalories = hkWorkout.statistics(for: HKQuantityType(.activeEnergyBurned))?
+            .sumQuantity()?.doubleValue(for: .kilocalorie())
+        session.distanceMeters = hkWorkout.statistics(for: HKQuantityType(.distanceWalkingRunning))?
+            .sumQuantity()?.doubleValue(for: .meter())
+        try? modelContext.save()
+    }
 }
 
 // MARK: - TemplatePickerSheet
@@ -235,6 +267,57 @@ private struct TemplatePickerSheet: View {
                 }
             }
             .navigationTitle("Add from Template")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - HKWorkoutPickerSheet
+
+private struct HKWorkoutPickerSheet: View {
+    let workouts: [HKWorkout]
+    let onSelect: (HKWorkout) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if workouts.isEmpty {
+                    ContentUnavailableView(
+                        "No Recent Workouts",
+                        systemImage: "applewatch",
+                        description: Text("No Apple Watch workouts found in the last 30 days.")
+                    )
+                } else {
+                    List(workouts, id: \.uuid) { workout in
+                        Button {
+                            onSelect(workout)
+                            dismiss()
+                        } label: {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(workout.workoutActivityType.meridianDisplayName)
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                                HStack(spacing: 4) {
+                                    Text(workout.startDate.formatted(date: .abbreviated, time: .shortened))
+                                    Text("·")
+                                    Text(String(format: "%02d:%02d", Int(workout.duration) / 60, Int(workout.duration) % 60))
+                                }
+                                .font(.system(size: 12))
+                                .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Link to Watch Workout")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
