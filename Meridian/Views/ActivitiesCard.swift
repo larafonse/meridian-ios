@@ -208,7 +208,7 @@ struct ActivitiesCard: View {
     }
 }
 
-private struct WorkoutItemRow: View {
+struct WorkoutItemRow: View {
     let item: WorkoutListItem
 
     var body: some View {
