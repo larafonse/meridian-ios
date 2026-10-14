@@ -180,7 +180,7 @@ struct ActiveWorkoutView: View {
 func totalVolumeInLbs(session: WorkoutSession) -> Double {
     session.exercises.reduce(0.0) { exSum, exercise in
         exSum + exercise.sets.reduce(0.0) { setSum, set in
-            let lbs = set.unit == "kg" ? set.weight * 0.453592 : set.weight
+            let lbs = set.unit == "kg" ? set.weight * 2.20462 : set.weight
             return setSum + lbs * Double(set.reps)
         }
     }

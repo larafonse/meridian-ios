@@ -94,9 +94,9 @@ struct TemplateWorkoutScoreTests {
         session.exercises = [ex]
         ctx.insert(session)
 
-        // 5 * 100 * 0.453592 = 226.796
+        // 5 * 100 kg * 2.20462 lbs/kg = 1102.31 lbs
         let result = totalVolumeInLbs(session: session)
-        #expect(abs(result - 226.796) < 0.001)
+        #expect(abs(result - 1102.31) < 0.01)
     }
 
     @Test("totalVolumeInLbs returns 0 for session with no sets")
