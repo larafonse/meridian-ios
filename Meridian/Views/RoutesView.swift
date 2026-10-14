@@ -38,11 +38,12 @@ struct RoutesView: View {
         } else {
             let flat = sync.allCoordinates.flatMap { $0 }
             ZStack(alignment: .top) {
-                Map(initialPosition: .region(routeMapRegion(for: flat))) {
+                Map(initialPosition: .userLocation(fallback: .region(routeMapRegion(for: flat)))) {
                     ForEach(sync.allCoordinates.indices, id: \.self) { i in
                         MapPolyline(coordinates: sync.allCoordinates[i])
                             .stroke(Color.accentColor.opacity(0.8), lineWidth: 2)
                     }
+                    UserAnnotation()
                 }
                 .ignoresSafeArea(edges: .bottom)
                 if sync.isSyncing && !sync.allCoordinates.isEmpty {

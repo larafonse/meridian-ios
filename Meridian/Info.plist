@@ -16,6 +16,8 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Meridian uses your location to center the routes map on where you are.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Meridian reads your Move, Exercise, and Stand ring progress so you can see your activity without opening the Fitness app.</string>
 	<key>NSHealthUpdateUsageDescription</key>
