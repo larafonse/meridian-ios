@@ -37,13 +37,9 @@ final class WorkoutSessionService: NSObject, ObservableObject {
         workoutStartDate = startDate
         workoutActivityType = configuration.activityType
 
-        let (bodyMassKg, ageYears, isMale) = await fetchUserProfile()
-        metrics = WorkoutMetricsAccumulator(
-            activityType: configuration.activityType,
-            bodyMassKg: bodyMassKg,
-            ageYears: ageYears,
-            isMale: isMale
-        )
+        // Fetch user profile in parallel with builder setup so the HR observer
+        // starts without waiting for HealthKit characteristic reads.
+        async let profileFetch = fetchUserProfile()
 
         let builder = HKWorkoutBuilder(healthStore: store, configuration: configuration, device: .local())
         self.builder = builder
@@ -52,6 +48,14 @@ final class WorkoutSessionService: NSObject, ObservableObject {
         if configuration.activityType.isGPSTracked {
             startLocationTracking()
         }
+
+        let (bodyMassKg, ageYears, isMale) = await profileFetch
+        metrics = WorkoutMetricsAccumulator(
+            activityType: configuration.activityType,
+            bodyMassKg: bodyMassKg,
+            ageYears: ageYears,
+            isMale: isMale
+        )
     }
 
     /// Returns the saved HKWorkout UUID, or nil if HealthKit write fails.
