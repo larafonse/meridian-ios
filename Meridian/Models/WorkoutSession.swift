@@ -12,6 +12,7 @@ final class WorkoutSession {
     var endedAt: Date?
     var distanceMeters: Double?
     var activeCalories: Double?
+    var templateID: UUID?
 
     @Relationship(deleteRule: .cascade)
     var exercises: [Exercise]
@@ -25,6 +26,7 @@ final class WorkoutSession {
         self.endedAt = nil
         self.distanceMeters = nil
         self.activeCalories = nil
+        self.templateID = nil
         self.exercises = []
     }
 
