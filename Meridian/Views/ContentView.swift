@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var routeSync = RouteSyncService()
+
     var body: some View {
         TabView {
             DashboardView()
                 .tabItem {
                     Label("Dashboard", systemImage: "chart.line.uptrend.xyaxis")
                 }
-            RoutesView()
+            RoutesView(sync: routeSync)
                 .tabItem {
                     Label("Routes", systemImage: "map")
                 }
