@@ -13,11 +13,7 @@ extension HKWorkoutActivityType {
 }
 
 struct RoutesView: View {
-    @State private var allCoordinates: [[CLLocationCoordinate2D]] = []
-    @State private var isLoading = true
-
-    private let workoutService = HealthKitWorkoutService()
-    private let routeService = WorkoutRouteService()
+    @State private var sync = RouteSyncService()
 
     var body: some View {
         NavigationStack {
@@ -25,44 +21,43 @@ struct RoutesView: View {
                 .navigationTitle("Routes")
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .task { await loadAllRoutes() }
+        .task { await sync.sync() }
     }
 
     @ViewBuilder
     private var content: some View {
-        if isLoading {
+        if sync.allCoordinates.isEmpty && sync.isSyncing {
             ProgressView("Loading routes…")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else if allCoordinates.isEmpty {
+        } else if sync.allCoordinates.isEmpty {
             ContentUnavailableView(
                 "No Routes",
                 systemImage: "map",
                 description: Text("GPS workouts from your Apple Watch will appear here.")
             )
         } else {
-            let flat = allCoordinates.flatMap { $0 }
-            Map(initialPosition: .region(routeMapRegion(for: flat))) {
-                ForEach(allCoordinates.indices, id: \.self) { i in
-                    MapPolyline(coordinates: allCoordinates[i])
-                        .stroke(Color.accentColor.opacity(0.8), lineWidth: 2)
+            let flat = sync.allCoordinates.flatMap { $0 }
+            ZStack(alignment: .top) {
+                Map(initialPosition: .region(routeMapRegion(for: flat))) {
+                    ForEach(sync.allCoordinates.indices, id: \.self) { i in
+                        MapPolyline(coordinates: sync.allCoordinates[i])
+                            .stroke(Color.accentColor.opacity(0.8), lineWidth: 2)
+                    }
+                }
+                .ignoresSafeArea(edges: .bottom)
+                if sync.isSyncing && !sync.allCoordinates.isEmpty {
+                    syncPill
                 }
             }
-            .ignoresSafeArea(edges: .bottom)
         }
     }
 
-    private func loadAllRoutes() async {
-        defer { isLoading = false }
-        let workouts = (try? await workoutService.fetchRecentWorkouts(limit: 50)) ?? []
-        let gpsWorkouts = workouts.filter { $0.workoutActivityType.isGPSTracked }
-
-        await withTaskGroup(of: [CLLocationCoordinate2D].self) { group in
-            for workout in gpsWorkouts {
-                group.addTask { await self.routeService.fetchRoute(for: workout) }
-            }
-            for await coords in group where !coords.isEmpty {
-                allCoordinates.append(coords)
-            }
-        }
+    private var syncPill: some View {
+        Text("Syncing \(sync.syncProgress.fetched) / \(sync.syncProgress.total)")
+            .font(.system(size: 12, weight: .medium))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(.ultraThinMaterial, in: Capsule())
+            .padding(.top, 8)
     }
 }
