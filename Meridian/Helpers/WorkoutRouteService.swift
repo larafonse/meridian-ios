@@ -38,7 +38,9 @@ final class WorkoutRouteService: @unchecked Sendable {
                 predicate: predicate,
                 anchor: nil,
                 limit: HKObjectQueryNoLimit
-            ) { _, samples, _, _, _ in
+            ) { [self] q, samples, _, _, _ in
+                // Stop the query immediately to prevent update handler from firing again.
+                store.stop(q)
                 continuation.resume(returning: samples as? [HKWorkoutRoute] ?? [])
             }
             store.execute(query)
@@ -48,11 +50,13 @@ final class WorkoutRouteService: @unchecked Sendable {
     private func fetchCoordinates(from route: HKWorkoutRoute) async -> [CLLocationCoordinate2D] {
         nonisolated(unsafe) var coordinates: [CLLocationCoordinate2D] = []
         return await withCheckedContinuation { continuation in
-            let query = HKWorkoutRouteQuery(route: route) { _, locations, done, _ in
+            let query = HKWorkoutRouteQuery(route: route) { [self] q, locations, done, error in
                 if let locations {
                     coordinates.append(contentsOf: locations.map(\.coordinate))
                 }
-                if done {
+                // Resume on completion OR on error (to avoid hanging the caller).
+                if done || error != nil {
+                    store.stop(q)
                     continuation.resume(returning: coordinates)
                 }
             }

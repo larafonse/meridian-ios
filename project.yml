@@ -18,9 +18,9 @@ targets:
       properties:
         com.apple.developer.healthkit: true
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.meridian.app
+      PRODUCT_BUNDLE_IDENTIFIER: com.meridianwellness.app
       INFOPLIST_FILE: Meridian/Info.plist
-      DEVELOPMENT_TEAM: ""
+      DEVELOPMENT_TEAM: TNXA6R4TQU
       TARGETED_DEVICE_FAMILY: "1,2"
     scheme:
       testTargets:
