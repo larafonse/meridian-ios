@@ -10,10 +10,7 @@ struct WeightChartView: View {
     private var stats: WeightStats { computeStats(entries: entries) }
 
     private var chartData: [WeightEntry] {
-        let cutoff = Calendar.current.date(byAdding: .day, value: -30, to: .now) ?? .now
-        return entries
-            .filter { $0.recordedAt >= cutoff }
-            .sorted { $0.recordedAt < $1.recordedAt }
+        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(3))
     }
 
     var body: some View {
