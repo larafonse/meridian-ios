@@ -39,9 +39,15 @@ struct WorkoutListItem: Identifiable {
         // HK workouts (matched or unmatched)
         for hk in hkWorkouts {
             let matchedSession = sessionByHKUUID[hk.uuid]
+            let displayName: String = {
+                if let s = matchedSession {
+                    return s.label.isEmpty ? s.workoutTypeDisplayName : s.label
+                }
+                return hk.workoutActivityType.meridianDisplayName
+            }()
             items.append(WorkoutListItem(
                 id: hk.uuid,
-                displayName: hk.workoutActivityType.meridianDisplayName,
+                displayName: displayName,
                 workoutType: String(hk.workoutActivityType.rawValue),
                 startedAt: hk.startDate,
                 duration: hk.duration,
