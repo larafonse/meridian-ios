@@ -7,6 +7,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Dashboard", systemImage: "chart.line.uptrend.xyaxis")
                 }
+            RoutesView()
+                .tabItem {
+                    Label("Routes", systemImage: "map")
+                }
             LogView()
                 .tabItem {
                     Label("Log", systemImage: "list.bullet")
