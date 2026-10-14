@@ -115,4 +115,21 @@ struct TemplateWorkoutScoreTests {
 
         #expect(totalVolumeInLbs(session: session) == 0.0)
     }
+
+    @Test("tickerSymbol: multi-word name uses initials up to 4 chars")
+    func tickerMultiWord() {
+        #expect(tickerSymbol(for: "Push Pull Legs") == "PPL")
+        #expect(tickerSymbol(for: "Upper Body Strength Training") == "UBST")
+    }
+
+    @Test("tickerSymbol: single-word name uses first 4 chars uppercased")
+    func tickerSingleWord() {
+        #expect(tickerSymbol(for: "Cardio") == "CARD")
+        #expect(tickerSymbol(for: "Abs") == "ABS")
+    }
+
+    @Test("tickerSymbol: trims whitespace and handles mixed case")
+    func tickerTrimmed() {
+        #expect(tickerSymbol(for: " push pull legs ") == "PPL")
+    }
 }
