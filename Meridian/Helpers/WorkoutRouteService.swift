@@ -49,13 +49,17 @@ final class WorkoutRouteService: @unchecked Sendable {
 
     private func fetchCoordinates(from route: HKWorkoutRoute) async -> [CLLocationCoordinate2D] {
         nonisolated(unsafe) var coordinates: [CLLocationCoordinate2D] = []
+        nonisolated(unsafe) var didResume = false
         return await withCheckedContinuation { continuation in
             let query = HKWorkoutRouteQuery(route: route) { [self] q, locations, done, error in
                 if let locations {
                     coordinates.append(contentsOf: locations.map(\.coordinate))
                 }
                 // Resume on completion OR on error (to avoid hanging the caller).
-                if done || error != nil {
+                // Guard ensures the continuation is never resumed a second time even if
+                // HealthKit fires an error callback followed by a done=true callback.
+                if (done || error != nil) && !didResume {
+                    didResume = true
                     store.stop(q)
                     continuation.resume(returning: coordinates)
                 }

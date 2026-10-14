@@ -15,6 +15,8 @@ final class RouteSyncService {
     private let routeService = WorkoutRouteService()
 
     func sync() async {
+        guard !isSyncing else { return }
+
         // 1. Load from cache immediately so the map renders before any HealthKit call.
         let cachedUUIDs = cache.cachedUUIDs()
         allCoordinates = cachedUUIDs.compactMap { cache.coordinates(for: $0) }
@@ -43,10 +45,10 @@ final class RouteSyncService {
                 }
             }
             for await (uuid, coords) in group {
+                syncProgress.fetched += 1
                 guard !coords.isEmpty else { continue }
                 taskCache.store(coords, for: uuid)
                 allCoordinates.append(coords)
-                syncProgress.fetched += 1
             }
         }
     }

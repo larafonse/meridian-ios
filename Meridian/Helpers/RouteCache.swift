@@ -1,6 +1,10 @@
 import Foundation
 import CoreLocation
 
+/// File-based route coordinate cache. `@unchecked Sendable` because `FileManager` I/O is
+/// inherently not thread-safe; callers are responsible for serializing concurrent access.
+/// `RouteSyncService` satisfies this contract by performing all reads and writes on the
+/// `@MainActor` (via the `for await` loop in `sync()`).
 final class RouteCache: @unchecked Sendable {
     private let cacheDir: URL
 
