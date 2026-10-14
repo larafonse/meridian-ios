@@ -48,6 +48,7 @@ struct ActivitiesView: View {
                     }
                     .listStyle(.insetGrouped)
                     .scrollContentBackground(.hidden)
+                    .refreshable { await loadWorkouts() }
                 }
             }
             .navigationTitle("Activities")

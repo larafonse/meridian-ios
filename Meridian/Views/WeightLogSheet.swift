@@ -32,7 +32,7 @@ struct WeightLogSheet: View {
                 }
             }
             .navigationTitle("Weight Log")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Done") { dismiss() }

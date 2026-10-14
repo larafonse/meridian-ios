@@ -13,14 +13,14 @@ final class HealthKitWorkoutService: @unchecked Sendable {
         return try await fetchWorkouts(from: thirtyDaysAgo, limit: limit)
     }
 
-    func fetchAllWorkouts() async throws -> [HKWorkout] {
+    func fetchAllWorkouts(limit: Int = 500) async throws -> [HKWorkout] {
         guard HKHealthStore.isHealthDataAvailable() else { return [] }
         let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         return try await withCheckedThrowingContinuation { continuation in
             let query = HKSampleQuery(
                 sampleType: HKObjectType.workoutType(),
                 predicate: nil,
-                limit: HKObjectQueryNoLimit,
+                limit: limit,
                 sortDescriptors: [sort]
             ) { _, samples, error in
                 if let error {
