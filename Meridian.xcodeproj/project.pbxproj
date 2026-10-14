@@ -34,6 +34,7 @@
 		A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D085771CDB27AE2B446E3 /* WorkoutTemplate.swift */; };
 		B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */; };
 		C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */; };
+		C99C0911507744CF8167115E /* StepsDistanceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C0796982984688B5368C13 /* StepsDistanceCardView.swift */; };
 		B2C3D4E5F6A7B8C9D0E1F2A3 /* WeightLogSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* WeightLogSheet.swift */; };
 		D4E5F6A7B8C9D0E1F2A3B4C5 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F6A7B8C9D0E1F2A3B4 /* ActivitiesView.swift */; };
 		C8C380C45E31114950096E0B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2014C059C12A72AA1C0083D /* ContentView.swift */; };
@@ -94,6 +95,7 @@
 		C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
 		D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummary.swift; sourceTree = "<group>"; };
 		DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightChartView.swift; sourceTree = "<group>"; };
+		F1C0796982984688B5368C13 /* StepsDistanceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsDistanceCardView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E1F2 /* WeightLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLogSheet.swift; sourceTree = "<group>"; };
 		C3D4E5F6A7B8C9D0E1F2A3B4 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
 		DC9B37070A2403A9F033391E /* HealthKitWorkoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitWorkoutService.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				2C33262722FB70FAFD5880BC /* TemplateEditorSheet.swift */,
 				837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */,
 				DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */,
+				F1C0796982984688B5368C13 /* StepsDistanceCardView.swift */,
 				A1B2C3D4E5F6A7B8C9D0E1F2 /* WeightLogSheet.swift */,
 				C3D4E5F6A7B8C9D0E1F2A3B4 /* ActivitiesView.swift */,
 				9F11DA5B64DE826FB12DDF4B /* WorkoutHistorySheet.swift */,
@@ -344,6 +347,7 @@
 				1D74A1325B0AC924B8D859B7 /* TemplateEditorSheet.swift in Sources */,
 				4DE7F28D02691171EBDB2712 /* TemplateListSheet.swift in Sources */,
 				C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */,
+				C99C0911507744CF8167115E /* StepsDistanceCardView.swift in Sources */,
 				B2C3D4E5F6A7B8C9D0E1F2A3 /* WeightLogSheet.swift in Sources */,
 				D4E5F6A7B8C9D0E1F2A3B4C5 /* ActivitiesView.swift in Sources */,
 				B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */,

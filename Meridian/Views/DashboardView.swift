@@ -17,6 +17,8 @@ struct DashboardView: View {
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
     @State private var activeWorkout: WorkoutSession? = nil
     @State private var hkWorkouts: [HKWorkout] = []
+    @State private var stepCount: Int = 0
+    @State private var distanceMeters: Double = 0
     @StateObject private var workoutService = WorkoutSessionService()
 
     init() {
@@ -43,28 +45,39 @@ struct DashboardView: View {
 
                     ActivityRingsWidget()
 
+                    HStack(spacing: 12) {
+                        Button { showingWeightLog = true } label: {
+                            WeightChartView(entries: entries)
+                                .padding(12)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        }
+                        .buttonStyle(.plain)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+                        )
+                        .frame(maxWidth: .infinity)
+
+                        StepsDistanceCardView(stepCount: stepCount, distanceMeters: distanceMeters)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .background(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+                            )
+                            .frame(maxWidth: .infinity)
+                    }
+
                     ActivitiesCard(
                         activeWorkout: $activeWorkout,
                         hkWorkouts: hkWorkouts,
                         onStart: { showingStartWorkout = true },
                         onResume: { showingActiveWorkout = true }
                     )
-
-                    HStack {
-                        Button { showingWeightLog = true } label: {
-                            WeightChartView(entries: entries)
-                                .padding(12)
-                                .background(Color.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 16))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
-                                )
-                                .frame(maxWidth: UIScreen.main.bounds.width / 2)
-                        }
-                        .buttonStyle(.plain)
-                        Spacer()
-                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -108,8 +121,14 @@ struct DashboardView: View {
     }
 
     private func loadHKWorkouts() async {
-        let service = HealthKitWorkoutService()
-        hkWorkouts = (try? await service.fetchTodayWorkouts()) ?? []
+        let hkWorkoutService = HealthKitWorkoutService()
+        hkWorkouts = (try? await hkWorkoutService.fetchTodayWorkouts()) ?? []
+
+        let activityService = HealthKitActivityService()
+        if let result = try? await activityService.fetchTodayStepsAndDistance() {
+            stepCount = result.steps
+            distanceMeters = result.distanceMeters
+        }
     }
 
     private func cleanupOrphanedSessions() {
