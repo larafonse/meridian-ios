@@ -13,6 +13,28 @@ final class HealthKitWorkoutService: @unchecked Sendable {
         return try await fetchWorkouts(from: thirtyDaysAgo, limit: limit)
     }
 
+    func fetchAllGPSWorkouts() async throws -> [HKWorkout] {
+        guard HKHealthStore.isHealthDataAvailable() else { return [] }
+        let gpsTypes: Set<HKWorkoutActivityType> = [.cycling, .running, .walking]
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let all: [HKWorkout] = try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: HKObjectType.workoutType(),
+                predicate: nil,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [sort]
+            ) { _, samples, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: (samples as? [HKWorkout]) ?? [])
+            }
+            store.execute(query)
+        }
+        return all.filter { gpsTypes.contains($0.workoutActivityType) }
+    }
+
     private func fetchWorkouts(from startDate: Date, limit: Int) async throws -> [HKWorkout] {
         guard HKHealthStore.isHealthDataAvailable() else { return [] }
         let workoutType = HKObjectType.workoutType()
