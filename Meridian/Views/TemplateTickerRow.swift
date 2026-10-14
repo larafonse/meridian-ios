@@ -31,14 +31,9 @@ struct TemplateTickerRow: View {
                 .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
                 .frame(width: 44, alignment: .leading)
 
-            VStack(alignment: .leading, spacing: 1) {
-                Text(template.name)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                Text(template.workoutTypeDisplayName)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.secondary)
-            }
+            Text(template.name)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
 
             Spacer()
 
