@@ -11,6 +11,7 @@
 		0DB38CEF5116B41755169122 /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */; };
 		0F0ABBB1EF3E925EE1ABE470 /* ActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5104A827CA2C07D61DDEEEBC /* ActivityService.swift */; };
 		164F76B1A42D5642A5999E2A /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */; };
+		1BA2A49D456143003F25EBB3 /* WorkoutRouteMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C53A980CDB983A9C2D220 /* WorkoutRouteMapViewTests.swift */; };
 		1D74A1325B0AC924B8D859B7 /* TemplateEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C33262722FB70FAFD5880BC /* TemplateEditorSheet.swift */; };
 		2A1F11AA91110C7E605272D9 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DB356B259500A68AF084EF /* DashboardView.swift */; };
 		34415A914025B3152D19E506 /* WorkoutHistorySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F11DA5B64DE826FB12DDF4B /* WorkoutHistorySheet.swift */; };
@@ -18,12 +19,14 @@
 		3751B81D85B4108EE6CDBC27 /* HealthKitWorkoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B37070A2403A9F033391E /* HealthKitWorkoutService.swift */; };
 		4068B4213604CBD03D2B6132 /* WorkoutTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2398797352FFBED24665C4D7 /* WorkoutTemplateTests.swift */; };
 		48DD701A2B01341D394AA68E /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E13733B259E96B49591F4A /* LogView.swift */; };
+		493A42394E7BEB3082A2E745 /* WorkoutRouteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */; };
 		4AE3A5EDB251FDC5733EF7DC /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */; };
 		4DE7F28D02691171EBDB2712 /* TemplateListSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */; };
 		527913F7C21ADF3D966BB552 /* MeridianApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */; };
 		558EC968FA92791674E1990B /* AddEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */; };
 		5D8B6A016D7E2EF557150F5D /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5313F27635FFA52368287DD3 /* ActiveWorkoutView.swift */; };
 		6C1005AB51E45BF4CC3FD495 /* ActivitiesCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FBED121CD08EA756E083B4 /* ActivitiesCard.swift */; };
+		6CC453CF20ABC17C52960DFD /* WorkoutRouteMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11D058072A578ED7BEBD86D /* WorkoutRouteMapView.swift */; };
 		9C1835907668617C8EE6ED4F /* ActivitySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E225A3C69661533A640C3540 /* ActivitySummaryTests.swift */; };
 		A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D085771CDB27AE2B446E3 /* WorkoutTemplate.swift */; };
 		B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */; };
@@ -59,6 +62,7 @@
 		5313F27635FFA52368287DD3 /* ActiveWorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveWorkoutView.swift; sourceTree = "<group>"; };
 		5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		62DB356B259500A68AF084EF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteService.swift; sourceTree = "<group>"; };
 		75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntrySheet.swift; sourceTree = "<group>"; };
 		7FD3B907C34A780FED0255D7 /* Meridian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meridian.entitlements; sourceTree = "<group>"; };
 		837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListSheet.swift; sourceTree = "<group>"; };
@@ -71,7 +75,8 @@
 		9F11DA5B64DE826FB12DDF4B /* WorkoutHistorySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistorySheet.swift; sourceTree = "<group>"; };
 		A03C88D06FDCA5AB98C1DB9B /* MeridianTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeridianTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3FE9F4CD4CD56279BBB9F5C /* StartWorkoutSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartWorkoutSheet.swift; sourceTree = "<group>"; };
-		C41A18C072EB83280908C1C6 /* Meridian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Meridian.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C41A18C072EB83280908C1C6 /* Meridian.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meridian.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C54C53A980CDB983A9C2D220 /* WorkoutRouteMapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteMapViewTests.swift; sourceTree = "<group>"; };
 		C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSession.swift; sourceTree = "<group>"; };
 		D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummary.swift; sourceTree = "<group>"; };
 		DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightChartView.swift; sourceTree = "<group>"; };
@@ -80,6 +85,7 @@
 		E6E13733B259E96B49591F4A /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeridianApp.swift; sourceTree = "<group>"; };
 		EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F11D058072A578ED7BEBD86D /* WorkoutRouteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteMapView.swift; sourceTree = "<group>"; };
 		F2014C059C12A72AA1C0083D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F8D91AD1C2423A0DC7E039DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +96,7 @@
 			children = (
 				E225A3C69661533A640C3540 /* ActivitySummaryTests.swift */,
 				9474AB5CC1511AE4E017700F /* WeightStatsTests.swift */,
+				C54C53A980CDB983A9C2D220 /* WorkoutRouteMapViewTests.swift */,
 				0BEAA79051486999B45C8259 /* WorkoutSessionTests.swift */,
 				2398797352FFBED24665C4D7 /* WorkoutTemplateTests.swift */,
 			);
@@ -144,6 +151,7 @@
 				D1AD90BCB0585CFBC2925DBC /* ActivitySummary.swift */,
 				DC9B37070A2403A9F033391E /* HealthKitWorkoutService.swift */,
 				0B82395EF2A3509D357589C5 /* WeightStats.swift */,
+				6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */,
 				87E23E3F84AECBE3EB5C10E5 /* WorkoutSessionService.swift */,
 			);
 			path = Helpers;
@@ -175,6 +183,7 @@
 				DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */,
 				9F11DA5B64DE826FB12DDF4B /* WorkoutHistorySheet.swift */,
 				2048B407F498A27A5208FF47 /* WorkoutLogSheet.swift */,
+				F11D058072A578ED7BEBD86D /* WorkoutRouteMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -235,6 +244,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					2682F6917222B9DDE8175A4E = {
+						DevelopmentTeam = "";
+					};
+				};
 			};
 			buildConfigurationList = 63DB0E1EF39921BE6B3BDE53 /* Build configuration list for PBXProject "Meridian" */;
 			developmentRegion = en;
@@ -276,6 +290,7 @@
 			files = (
 				9C1835907668617C8EE6ED4F /* ActivitySummaryTests.swift in Sources */,
 				361CFD3594C53CDAF7E2F8CA /* WeightStatsTests.swift in Sources */,
+				1BA2A49D456143003F25EBB3 /* WorkoutRouteMapViewTests.swift in Sources */,
 				FF48F34B0969A6CA99220549 /* WorkoutSessionTests.swift in Sources */,
 				4068B4213604CBD03D2B6132 /* WorkoutTemplateTests.swift in Sources */,
 			);
@@ -304,6 +319,8 @@
 				FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */,
 				34415A914025B3152D19E506 /* WorkoutHistorySheet.swift in Sources */,
 				DAB682071CB1AE16C9D6BAB6 /* WorkoutLogSheet.swift in Sources */,
+				6CC453CF20ABC17C52960DFD /* WorkoutRouteMapView.swift in Sources */,
+				493A42394E7BEB3082A2E745 /* WorkoutRouteService.swift in Sources */,
 				0DB38CEF5116B41755169122 /* WorkoutSession.swift in Sources */,
 				FF0D1D78CC28F72D4F309C06 /* WorkoutSessionService.swift in Sources */,
 				A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */,
@@ -327,14 +344,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Meridian/Meridian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = TNXA6R4TQU;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Meridian/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meridianwellness.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridian.app;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -501,14 +518,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Meridian/Meridian.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = TNXA6R4TQU;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Meridian/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.meridianwellness.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meridian.app;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

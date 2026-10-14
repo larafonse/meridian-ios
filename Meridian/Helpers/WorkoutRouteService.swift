@@ -46,7 +46,7 @@ final class WorkoutRouteService: @unchecked Sendable {
     }
 
     private func fetchCoordinates(from route: HKWorkoutRoute) async -> [CLLocationCoordinate2D] {
-        var coordinates: [CLLocationCoordinate2D] = []
+        nonisolated(unsafe) var coordinates: [CLLocationCoordinate2D] = []
         return await withCheckedContinuation { continuation in
             let query = HKWorkoutRouteQuery(route: route) { _, locations, done, _ in
                 if let locations {
