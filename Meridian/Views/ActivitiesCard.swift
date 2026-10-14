@@ -70,13 +70,13 @@ struct WorkoutListItem: Identifiable {
 
 struct ActivitiesCard: View {
     @Binding var activeWorkout: WorkoutSession?
+    let hkWorkouts: [HKWorkout]
     let onStart: () -> Void
     let onResume: () -> Void
 
     @Query private var allSessions: [WorkoutSession]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var hkWorkouts: [HKWorkout] = []
     @State private var selectedItem: WorkoutListItem? = nil
     @State private var historyWorkoutType: String? = nil
     @State private var historyDisplayName: String = ""
@@ -186,7 +186,6 @@ struct ActivitiesCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
         )
-        .task { await loadHKWorkouts() }
         .sheet(item: $selectedItem) { item in
             WorkoutLogSheet(session: item.session, hkWorkout: item.hkWorkout)
         }
@@ -198,13 +197,6 @@ struct ActivitiesCard: View {
                 WorkoutHistorySheet(workoutType: type, displayName: historyDisplayName)
             }
         }
-    }
-
-    // MARK: - HealthKit
-
-    private func loadHKWorkouts() async {
-        let service = HealthKitWorkoutService()
-        hkWorkouts = (try? await service.fetchTodayWorkouts()) ?? []
     }
 
     // MARK: - Delete

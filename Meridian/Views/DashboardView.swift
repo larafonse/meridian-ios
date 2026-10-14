@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import Charts
 import UIKit
+import HealthKit
 
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
@@ -14,6 +15,7 @@ struct DashboardView: View {
     // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
     @State private var activeWorkout: WorkoutSession? = nil
+    @State private var hkWorkouts: [HKWorkout] = []
     @StateObject private var workoutService = WorkoutSessionService()
 
     init() {
@@ -42,6 +44,7 @@ struct DashboardView: View {
 
                     ActivitiesCard(
                         activeWorkout: $activeWorkout,
+                        hkWorkouts: hkWorkouts,
                         onStart: { showingStartWorkout = true },
                         onResume: { showingActiveWorkout = true }
                     )
@@ -63,9 +66,11 @@ struct DashboardView: View {
                 .padding(.top, 16)
                 .padding(.bottom, 100)
             }
+            .refreshable { await loadHKWorkouts() }
 
             addButton
         }
+        .task { await loadHKWorkouts() }
         .onAppear { cleanupOrphanedSessions() }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
@@ -88,10 +93,16 @@ struct DashboardView: View {
                         showingActiveWorkout = false
                         activeWorkout = nil
                         workoutService.reset()
+                        Task { await loadHKWorkouts() }
                     }
                 )
             }
         }
+    }
+
+    private func loadHKWorkouts() async {
+        let service = HealthKitWorkoutService()
+        hkWorkouts = (try? await service.fetchTodayWorkouts()) ?? []
     }
 
     private func cleanupOrphanedSessions() {
