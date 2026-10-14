@@ -8,7 +8,8 @@ final class HealthKitActivityService: @unchecked Sendable {
         let readTypes: Set<HKObjectType> = [
             HKObjectType.activitySummaryType(),
             HKQuantityType(.heartRate),
-            HKObjectType.workoutType()
+            HKObjectType.workoutType(),
+            HKSeriesType.workoutRoute()
         ]
         let writeTypes: Set<HKSampleType> = [
             HKObjectType.workoutType()
