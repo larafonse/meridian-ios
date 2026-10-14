@@ -12,78 +12,31 @@ struct StartWorkoutSheet: View {
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
     @Query(sort: \WorkoutSession.startedAt, order: .reverse) private var allSessions: [WorkoutSession]
 
-    @State private var selectedType: WorkoutType = WorkoutType.all[0]
-    @State private var label: String = ""
     @State private var isStarting = false
     @State private var showingTemplates = false
 
+    private var strengthType: WorkoutType {
+        WorkoutType.all.first(where: { $0.id == "traditionalStrengthTraining" }) ?? WorkoutType.all[0]
+    }
+
     var body: some View {
         NavigationStack {
-            List {
-                if !templates.isEmpty {
-                    Section("My Templates") {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(templates) { template in
-                                    TemplateCard(template: template) {
-                                        Task { await startFromTemplate(template) }
-                                    }
-                                    .disabled(isStarting)
-                                }
-                            }
-                            .padding(.vertical, 4)
-                        }
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            ScrollView {
+                VStack(spacing: 12) {
+                    DefaultWorkoutCard(type: strengthType) {
+                        Task { await startDefault() }
                     }
-                }
+                    .disabled(isStarting)
 
-                Section("Label (optional)") {
-                    TextField("e.g. Leg Day", text: $label)
-                }
-
-                Section("Workout Type") {
-                    ForEach(WorkoutType.all) { type in
-                        Button {
-                            selectedType = type
-                        } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: type.symbol)
-                                    .font(.system(size: 20))
-                                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                                    .frame(width: 28)
-                                Text(type.displayName)
-                                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                                Spacer()
-                                if selectedType.id == type.id {
-                                    Image(systemName: "checkmark").foregroundStyle(.blue)
-                                }
-                            }
+                    ForEach(templates) { template in
+                        TemplateCard(template: template) {
+                            Task { await startFromTemplate(template) }
                         }
+                        .disabled(isStarting)
                     }
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                Button {
-                    Task { await startBlank() }
-                } label: {
-                    Group {
-                        if isStarting {
-                            ProgressView().tint(.white)
-                        } else {
-                            Text("Start Workout")
-                                .font(.system(size: 17, weight: .semibold))
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 52)
-                    .background(Color(red: 0.04, green: 0.04, blue: 0.04))
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                }
-                .disabled(isStarting)
                 .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-                .background(Color(.systemGroupedBackground))
+                .padding(.vertical, 16)
             }
             .navigationTitle("New Workout")
             .navigationBarTitleDisplayMode(.inline)
@@ -102,22 +55,22 @@ struct StartWorkoutSheet: View {
         }
     }
 
-    // MARK: - Start blank
+    // MARK: - Start default
 
-    private func startBlank() async {
+    private func startDefault() async {
         isStarting = true
         defer { isStarting = false }
 
         let session = WorkoutSession(
-            workoutType: selectedType.id,
-            workoutTypeDisplayName: selectedType.displayName,
-            label: label.trimmingCharacters(in: .whitespaces),
+            workoutType: strengthType.id,
+            workoutTypeDisplayName: strengthType.displayName,
+            label: "",
             startedAt: .now
         )
         modelContext.insert(session)
 
         let config = HKWorkoutConfiguration()
-        config.activityType = selectedType.hkType
+        config.activityType = strengthType.hkType
         try? await service.start(configuration: config)
 
         activeWorkout = session
@@ -182,6 +135,38 @@ func prefillSets(for templateExercise: TemplateExercise, lastSession: WorkoutSes
     }
 }
 
+// MARK: - Default workout card
+
+private struct DefaultWorkoutCard: View {
+    let type: WorkoutType
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(alignment: .leading, spacing: 4) {
+                Image(systemName: type.symbol)
+                    .font(.system(size: 22))
+                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                Spacer()
+                Text(type.displayName)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                Text("Quick start")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(red: 0.961, green: 0.941, blue: 0.922))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+            )
+        }
+    }
+}
+
 // MARK: - Template card
 
 private struct TemplateCard: View {
@@ -191,6 +176,10 @@ private struct TemplateCard: View {
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 4) {
+                Image(systemName: WorkoutType.all.first(where: { $0.id == template.workoutType })?.symbol ?? "figure.mixed.cardio")
+                    .font(.system(size: 22))
+                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                Spacer()
                 Text(template.name)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
@@ -202,7 +191,7 @@ private struct TemplateCard: View {
                     .foregroundStyle(.secondary)
             }
             .padding(12)
-            .frame(minWidth: 120, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(red: 0.961, green: 0.941, blue: 0.922))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
