@@ -89,6 +89,12 @@ struct WeightChartView: View {
                     .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.50))
             }
         }
+        .chartYScale(domain: {
+            let weights = chartData.map(\.weight)
+            let min = (weights.min() ?? 0) - 2
+            let max = (weights.max() ?? 0) + 2
+            return min...max
+        }())
         .chartYAxis {
             AxisMarks(values: .automatic(desiredCount: 4)) { _ in
                 AxisGridLine().foregroundStyle(Color(red: 0.898, green: 0.898, blue: 0.898))
