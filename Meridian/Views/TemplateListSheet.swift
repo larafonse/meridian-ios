@@ -3,10 +3,31 @@ import SwiftData
 
 struct TemplateListSheet: View {
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
+    @Query(sort: \TemplateWorkoutScore.date, order: .reverse) private var scores: [TemplateWorkoutScore]
     @Environment(\.modelContext) private var modelContext
 
     @State private var editingTemplate: WorkoutTemplate? = nil
     @State private var showingNewTemplate = false
+
+    /// Templates sorted: those with scores first (most recently used), then by creation date.
+    private var sortedTemplates: [WorkoutTemplate] {
+        let recentTemplateIDs: [UUID] = {
+            var seen = Set<UUID>()
+            return scores.compactMap { score -> UUID? in
+                guard !seen.contains(score.templateID) else { return nil }
+                seen.insert(score.templateID)
+                return score.templateID
+            }
+        }()
+
+        let withScores = recentTemplateIDs.compactMap { id in
+            templates.first(where: { $0.id == id })
+        }
+        let withoutScores = templates.filter { t in
+            !recentTemplateIDs.contains(t.id)
+        }
+        return withScores + withoutScores
+    }
 
     var body: some View {
         NavigationStack {
@@ -19,23 +40,16 @@ struct TemplateListSheet: View {
                     )
                 } else {
                     List {
-                        ForEach(templates) { template in
+                        ForEach(sortedTemplates) { template in
                             Button {
                                 editingTemplate = template
                             } label: {
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(template.name)
-                                        .font(.system(size: 15, weight: .semibold))
-                                        .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-                                    Text("\(template.workoutTypeDisplayName) · \(template.exercises.count) exercises")
-                                        .font(.system(size: 12))
-                                        .foregroundStyle(.secondary)
-                                }
-                                .padding(.vertical, 4)
+                                TemplateTickerRow(template: template)
                             }
+                            .buttonStyle(.plain)
                         }
                         .onDelete { offsets in
-                            for i in offsets { modelContext.delete(templates[i]) }
+                            for i in offsets { modelContext.delete(sortedTemplates[i]) }
                             try? modelContext.save()
                         }
                     }
