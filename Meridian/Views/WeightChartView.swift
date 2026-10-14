@@ -13,6 +13,10 @@ struct WeightChartView: View {
         Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(3))
     }
 
+    private var lineData: [WeightEntry] {
+        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(4))
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             statsRow
@@ -57,28 +61,31 @@ struct WeightChartView: View {
     // MARK: Chart
 
     private var chart: some View {
-        Chart(chartData) { entry in
-            LineMark(
-                x: .value("Date", entry.recordedAt, unit: .day),
-                y: .value("Weight", entry.weight)
-            )
-            .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-            .interpolationMethod(.catmullRom)
+        Chart {
+            ForEach(lineData) { entry in
+                LineMark(
+                    x: .value("Date", entry.recordedAt, unit: .day),
+                    y: .value("Weight", entry.weight)
+                )
+                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                .interpolationMethod(.catmullRom)
+            }
+            ForEach(chartData) { entry in
+                PointMark(
+                    x: .value("Date", entry.recordedAt, unit: .day),
+                    y: .value("Weight", entry.weight)
+                )
+                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                .symbolSize(selectedEntry?.id == entry.id ? 60 : 25)
 
-            PointMark(
-                x: .value("Date", entry.recordedAt, unit: .day),
-                y: .value("Weight", entry.weight)
-            )
-            .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
-            .symbolSize(selectedEntry?.id == entry.id ? 60 : 25)
-
-            if let selected = selectedEntry, selected.id == entry.id {
-                RuleMark(x: .value("Date", selected.recordedAt, unit: .day))
-                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04).opacity(0.2))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [4]))
-                    .annotation(position: .top, spacing: 4) {
-                        callout(for: selected)
-                    }
+                if let selected = selectedEntry, selected.id == entry.id {
+                    RuleMark(x: .value("Date", selected.recordedAt, unit: .day))
+                        .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04).opacity(0.2))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4]))
+                        .annotation(position: .top, spacing: 4) {
+                            callout(for: selected)
+                        }
+                }
             }
         }
         .chartXAxis {
@@ -90,7 +97,7 @@ struct WeightChartView: View {
             }
         }
         .chartYScale(domain: {
-            let weights = chartData.map(\.weight)
+            let weights = lineData.map(\.weight)
             let min = (weights.min() ?? 0) - 2
             let max = (weights.max() ?? 0) + 2
             return min...max
