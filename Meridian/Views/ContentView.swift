@@ -9,10 +9,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Dashboard", systemImage: "chart.line.uptrend.xyaxis")
                 }
-            RoutesView(sync: routeSync)
-                .tabItem {
-                    Label("Routes", systemImage: "map")
-                }
+            // RoutesView(sync: routeSync)
+            //     .tabItem {
+            //         Label("Routes", systemImage: "map")
+            //     }
             ActivitiesView()
                 .tabItem {
                     Label("Activities", systemImage: "figure.run")
