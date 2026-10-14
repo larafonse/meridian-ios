@@ -74,6 +74,7 @@ struct StartWorkoutSheet: View {
             startedAt: .now
         )
         modelContext.insert(session)
+        session.templateID = template.id
 
         let lastSession = allSessions.first(where: {
             $0.workoutType == template.workoutType && $0.endedAt != nil

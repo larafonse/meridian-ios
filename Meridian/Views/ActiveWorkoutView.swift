@@ -159,8 +159,30 @@ struct ActiveWorkoutView: View {
 
     private func endWorkout() {
         workout.endedAt = Date()
+        if let templateID = workout.templateID {
+            let score = TemplateWorkoutScore(
+                templateID: templateID,
+                templateName: workout.label,
+                sessionID: workout.id,
+                date: workout.endedAt!,
+                totalVolume: totalVolumeInLbs(session: workout)
+            )
+            modelContext.insert(score)
+        }
         try? modelContext.save()
         onEnd()
+    }
+}
+
+// MARK: - Volume calculation
+
+/// Returns total volume in lbs for a session. Exposed at file scope for testability.
+func totalVolumeInLbs(session: WorkoutSession) -> Double {
+    session.exercises.reduce(0.0) { exSum, exercise in
+        exSum + exercise.sets.reduce(0.0) { setSum, set in
+            let lbs = set.unit == "kg" ? set.weight * 0.453592 : set.weight
+            return setSum + lbs * Double(set.reps)
+        }
     }
 }
 
