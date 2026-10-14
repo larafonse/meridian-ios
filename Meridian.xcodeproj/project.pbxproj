@@ -46,7 +46,9 @@
 		FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B82395EF2A3509D357589C5 /* WeightStats.swift */; };
 		FF0D1D78CC28F72D4F309C06 /* WorkoutSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E23E3F84AECBE3EB5C10E5 /* WorkoutSessionService.swift */; };
 		FF8800AA11BB22CC33DD44EE /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE77FF8800AA11BB22CC33DD /* WorkoutType.swift */; };
+		C3E4F5A6B7C8D9E0F1A2B3C4 /* WorkoutLinkerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F5A6B7C8D9E0F1A2B3C4D5 /* WorkoutLinkerService.swift */; };
 		FF48F34B0969A6CA99220549 /* WorkoutSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEAA79051486999B45C8259 /* WorkoutSessionTests.swift */; };
+		A1C2D3E4F5A6B7C8D9E0F1A2 /* WorkoutLinkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D3E4F5A6B7C8D9E0F1A2B3 /* WorkoutLinkerTests.swift */; };
 		AA11BB22CC33DD44EE55FF66 /* WorkoutMetricsAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600AA /* WorkoutMetricsAccumulator.swift */; };
 		CC33DD44EE55FF6600AABB22 /* WorkoutMetricsAccumulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB22CC33 /* WorkoutMetricsAccumulatorTests.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +109,8 @@
 		F11D058072A578ED7BEBD86D /* WorkoutRouteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteMapView.swift; sourceTree = "<group>"; };
 		F2014C059C12A72AA1C0083D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EE77FF8800AA11BB22CC33DD /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
+		B2D3E4F5A6B7C8D9E0F1A2B3 /* WorkoutLinkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLinkerTests.swift; sourceTree = "<group>"; };
+		D4F5A6B7C8D9E0F1A2B3C4D5 /* WorkoutLinkerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLinkerService.swift; sourceTree = "<group>"; };
 		F8D91AD1C2423A0DC7E039DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +126,7 @@
 				0BEAA79051486999B45C8259 /* WorkoutSessionTests.swift */,
 				2398797352FFBED24665C4D7 /* WorkoutTemplateTests.swift */,
 				DD44EE55FF6600AABB22CC33 /* WorkoutMetricsAccumulatorTests.swift */,
+				B2D3E4F5A6B7C8D9E0F1A2B3 /* WorkoutLinkerTests.swift */,
 			);
 			path = MeridianTests;
 			sourceTree = "<group>";
@@ -179,6 +184,7 @@
 				6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */,
 				87E23E3F84AECBE3EB5C10E5 /* WorkoutSessionService.swift */,
 				BB22CC33DD44EE55FF6600AA /* WorkoutMetricsAccumulator.swift */,
+				D4F5A6B7C8D9E0F1A2B3C4D5 /* WorkoutLinkerService.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -326,6 +332,7 @@
 				FF48F34B0969A6CA99220549 /* WorkoutSessionTests.swift in Sources */,
 				4068B4213604CBD03D2B6132 /* WorkoutTemplateTests.swift in Sources */,
 				CC33DD44EE55FF6600AABB22 /* WorkoutMetricsAccumulatorTests.swift in Sources */,
+				A1C2D3E4F5A6B7C8D9E0F1A2 /* WorkoutLinkerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +371,7 @@
 				AA11BB22CC33DD44EE55FF66 /* WorkoutMetricsAccumulator.swift in Sources */,
 				A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */,
 				FF8800AA11BB22CC33DD44EE /* WorkoutType.swift in Sources */,
+				C3E4F5A6B7C8D9E0F1A2B3C4 /* WorkoutLinkerService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
