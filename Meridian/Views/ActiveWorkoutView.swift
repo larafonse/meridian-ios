@@ -3,7 +3,6 @@ import SwiftData
 
 struct ActiveWorkoutView: View {
     let workout: WorkoutSession
-    @ObservedObject var service: WorkoutSessionService
     let onMinimize: () -> Void
     let onEnd: () -> Void
 
@@ -12,23 +11,13 @@ struct ActiveWorkoutView: View {
     @State private var timer: Timer? = nil
     @State private var newExerciseName: String = ""
     @State private var showingAddExercise = false
-    @State private var isEnding = false
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Stats header
-                let isGPS = ["walking", "running", "cycling"].contains(workout.workoutType)
-                HStack(spacing: 0) {
+                // Timer header
+                HStack {
                     statCell(label: "Time", value: formatElapsed(elapsed))
-                    Divider().frame(height: 50)
-                    statCell(label: "BPM", value: service.currentBPM.map { "\($0)" } ?? "—")
-                    if isGPS {
-                        Divider().frame(height: 50)
-                        statCell(label: "km", value: service.metrics.map { formatDistance($0.distanceMeters) } ?? "—")
-                    }
-                    Divider().frame(height: 50)
-                    statCell(label: "kcal", value: service.metrics.map { formatCalories($0.activeCalories) } ?? "—")
                 }
                 .padding(.vertical, 12)
                 .background(Color(red: 0.961, green: 0.941, blue: 0.922))
@@ -82,17 +71,12 @@ struct ActiveWorkoutView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        Task { await endWorkout() }
+                        endWorkout()
                     } label: {
-                        if isEnding {
-                            ProgressView()
-                        } else {
-                            Text("End")
-                                .foregroundStyle(.red)
-                                .fontWeight(.semibold)
-                        }
+                        Text("End")
+                            .foregroundStyle(.red)
+                            .fontWeight(.semibold)
                     }
-                    .disabled(isEnding)
                 }
                 ToolbarItem(placement: .bottomBar) {
                     Button {
@@ -131,9 +115,7 @@ struct ActiveWorkoutView: View {
     private func startTimer() {
         elapsed = Date().timeIntervalSince(workout.startedAt)
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            let now = Date()
-            elapsed = now.timeIntervalSince(workout.startedAt)
-            service.metrics?.tick(at: now)
+            elapsed = Date().timeIntervalSince(workout.startedAt)
         }
     }
 
@@ -145,14 +127,6 @@ struct ActiveWorkoutView: View {
     private func formatElapsed(_ t: TimeInterval) -> String {
         let s = Int(t)
         return String(format: "%02d:%02d", s / 60, s % 60)
-    }
-
-    private func formatDistance(_ metres: Double) -> String {
-        String(format: "%.2f", metres / 1000)
-    }
-
-    private func formatCalories(_ kcal: Double) -> String {
-        String(Int(kcal))
     }
 
     // MARK: - Exercise / Set mutations
@@ -183,15 +157,9 @@ struct ActiveWorkoutView: View {
 
     // MARK: - End workout
 
-    private func endWorkout() async {
-        isEnding = true
-        let result = try? await service.finish()
+    private func endWorkout() {
         workout.endedAt = Date()
-        workout.healthKitUUID = result?.uuid
-        workout.distanceMeters = result?.distanceMeters
-        workout.activeCalories = result?.activeCalories
         try? modelContext.save()
-        isEnding = false
         onEnd()
     }
 }

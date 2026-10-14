@@ -19,7 +19,7 @@ struct DashboardView: View {
     @State private var hkWorkouts: [HKWorkout] = []
     @State private var stepCount: Int = 0
     @State private var distanceMeters: Double = 0
-    @StateObject private var workoutService = WorkoutSessionService()
+    @EnvironmentObject private var linker: WorkoutLinkerService
 
     init() {
         let appearance = UINavigationBarAppearance()
@@ -98,21 +98,16 @@ struct DashboardView: View {
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }
         }) {
-            StartWorkoutSheet(
-                service: workoutService,
-                activeWorkout: $activeWorkout
-            )
+            StartWorkoutSheet(activeWorkout: $activeWorkout)
         }
         .fullScreenCover(isPresented: $showingActiveWorkout) {
             if let workout = activeWorkout {
                 ActiveWorkoutView(
                     workout: workout,
-                    service: workoutService,
                     onMinimize: { showingActiveWorkout = false },
                     onEnd: {
                         showingActiveWorkout = false
                         activeWorkout = nil
-                        workoutService.reset()
                         Task { await loadHKWorkouts() }
                     }
                 )
@@ -121,6 +116,7 @@ struct DashboardView: View {
     }
 
     private func loadHKWorkouts() async {
+        await linker.linkPendingSessions()
         let hkWorkoutService = HealthKitWorkoutService()
         hkWorkouts = (try? await hkWorkoutService.fetchTodayWorkouts()) ?? []
 

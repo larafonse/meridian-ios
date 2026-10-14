@@ -1,18 +1,15 @@
 import SwiftUI
 import SwiftData
-import HealthKit
 
 struct StartWorkoutSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    let service: WorkoutSessionService
     @Binding var activeWorkout: WorkoutSession?
 
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
     @Query(sort: \WorkoutSession.startedAt, order: .reverse) private var allSessions: [WorkoutSession]
 
-    @State private var isStarting = false
     @State private var showingTemplates = false
 
     private var strengthType: WorkoutType {
@@ -24,15 +21,13 @@ struct StartWorkoutSheet: View {
             ScrollView {
                 VStack(spacing: 12) {
                     DefaultWorkoutCard(type: strengthType) {
-                        Task { await startDefault() }
+                        startDefault()
                     }
-                    .disabled(isStarting)
 
                     ForEach(templates) { template in
                         TemplateCard(template: template) {
-                            Task { await startFromTemplate(template) }
+                            startFromTemplate(template)
                         }
-                        .disabled(isStarting)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -57,10 +52,7 @@ struct StartWorkoutSheet: View {
 
     // MARK: - Start default
 
-    private func startDefault() async {
-        isStarting = true
-        defer { isStarting = false }
-
+    private func startDefault() {
         let session = WorkoutSession(
             workoutType: strengthType.id,
             workoutTypeDisplayName: strengthType.displayName,
@@ -68,21 +60,13 @@ struct StartWorkoutSheet: View {
             startedAt: .now
         )
         modelContext.insert(session)
-
-        let config = HKWorkoutConfiguration()
-        config.activityType = strengthType.hkType
-        try? await service.start(configuration: config)
-
         activeWorkout = session
         dismiss()
     }
 
     // MARK: - Start from template
 
-    private func startFromTemplate(_ template: WorkoutTemplate) async {
-        isStarting = true
-        defer { isStarting = false }
-
+    private func startFromTemplate(_ template: WorkoutTemplate) {
         let session = WorkoutSession(
             workoutType: template.workoutType,
             workoutTypeDisplayName: template.workoutTypeDisplayName,
@@ -108,11 +92,6 @@ struct StartWorkoutSheet: View {
 
             session.exercises.append(exercise)
         }
-
-        let hkType = WorkoutType.all.first(where: { $0.id == template.workoutType })?.hkType ?? .other
-        let config = HKWorkoutConfiguration()
-        config.activityType = hkType
-        try? await service.start(configuration: config)
 
         activeWorkout = session
         dismiss()
