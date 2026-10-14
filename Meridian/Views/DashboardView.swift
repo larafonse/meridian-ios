@@ -9,6 +9,7 @@ struct DashboardView: View {
     @Query(sort: \WeightEntry.recordedAt, order: .reverse) private var entries: [WeightEntry]
     @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
     @State private var showingAddSheet = false
+    @State private var showingWeightLog = false
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
     // activeWorkout is @State (not persisted). If the OS terminates the process while a
@@ -50,15 +51,18 @@ struct DashboardView: View {
                     )
 
                     HStack {
-                        WeightChartView(entries: entries)
-                            .padding(12)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
-                            )
-                            .frame(maxWidth: UIScreen.main.bounds.width / 2)
+                        Button { showingWeightLog = true } label: {
+                            WeightChartView(entries: entries)
+                                .padding(12)
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+                                )
+                                .frame(maxWidth: UIScreen.main.bounds.width / 2)
+                        }
+                        .buttonStyle(.plain)
                         Spacer()
                     }
                 }
@@ -74,6 +78,9 @@ struct DashboardView: View {
         .onAppear { cleanupOrphanedSessions() }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
+        }
+        .sheet(isPresented: $showingWeightLog) {
+            WeightLogSheet()
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }
