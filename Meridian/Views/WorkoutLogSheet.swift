@@ -112,12 +112,12 @@ struct WorkoutLogSheet: View {
                         } label: {
                             Label("Add from template", systemImage: "list.bullet.rectangle")
                         }
-                        if workingSession != nil && workingSession?.healthKitUUID == nil {
+                        if workingSession != nil {
                             Button {
                                 loadHKWorkoutsForPicker()
                                 showingHKPicker = true
                             } label: {
-                                Label("Link to Watch workout", systemImage: "applewatch")
+                                Label(workingSession?.healthKitUUID == nil ? "Link to Watch workout" : "Change Watch workout link", systemImage: "applewatch")
                             }
                         }
                     } label: {
