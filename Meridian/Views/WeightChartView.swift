@@ -98,7 +98,8 @@ struct WeightChartView: View {
         }
         .chartXScale(domain: {
             let start = lineData.first?.recordedAt ?? .now
-            let end = lineData.last?.recordedAt ?? .now
+            let last = lineData.last?.recordedAt ?? .now
+            let end = Calendar.current.date(byAdding: .day, value: 1, to: last) ?? last
             return start...end
         }())
         .chartYScale(domain: {
