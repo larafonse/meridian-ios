@@ -89,7 +89,7 @@ struct WeightChartView: View {
             }
         }
         .chartXAxis {
-            AxisMarks(values: .automatic(desiredCount: 5)) { _ in
+            AxisMarks(values: .automatic(desiredCount: 3)) { _ in
                 AxisGridLine().foregroundStyle(Color(red: 0.898, green: 0.898, blue: 0.898))
                 AxisValueLabel(format: .dateTime.month(.abbreviated).day())
                     .font(.system(size: 10))
@@ -108,7 +108,7 @@ struct WeightChartView: View {
             return min...max
         }())
         .chartYAxis {
-            AxisMarks(values: .automatic(desiredCount: 4)) { _ in
+            AxisMarks(values: .automatic(desiredCount: 3)) { _ in
                 AxisGridLine().foregroundStyle(Color(red: 0.898, green: 0.898, blue: 0.898))
                 AxisValueLabel()
                     .font(.system(size: 10))
