@@ -13,6 +13,7 @@ struct WorkoutLogSheet: View {
     @State private var workingSession: WorkoutSession? = nil
     @State private var newExerciseName: String = ""
     @State private var showingAddExercise = false
+    @State private var showingTemplatePicker = false
 
     private var displayName: String {
         if let s = workingSession {
@@ -96,9 +97,19 @@ struct WorkoutLogSheet: View {
                     .fontWeight(.semibold)
                 }
                 ToolbarItem(placement: .bottomBar) {
-                    Button {
-                        ensureSession()
-                        showingAddExercise = true
+                    Menu {
+                        Button {
+                            ensureSession()
+                            showingAddExercise = true
+                        } label: {
+                            Label("Type exercise name", systemImage: "pencil")
+                        }
+                        Button {
+                            ensureSession()
+                            showingTemplatePicker = true
+                        } label: {
+                            Label("Add from template", systemImage: "list.bullet.rectangle")
+                        }
                     } label: {
                         Label("Add Exercise", systemImage: "plus.circle.fill")
                     }
@@ -114,6 +125,12 @@ struct WorkoutLogSheet: View {
                 TextField("Exercise name", text: $newExerciseName)
                 Button("Add") { addExercise() }
                 Button("Cancel", role: .cancel) { newExerciseName = "" }
+            }
+            .sheet(isPresented: $showingTemplatePicker) {
+                TemplatePickerSheet { template in
+                    addExercises(from: template)
+                    showingTemplatePicker = false
+                }
             }
         }
         .onAppear {
@@ -160,6 +177,70 @@ struct WorkoutLogSheet: View {
     private func deleteSets(_ offsets: IndexSet, from exercise: Exercise, sortedSets: [WorkoutSet]) {
         for i in offsets {
             modelContext.delete(sortedSets[i])
+        }
+    }
+
+    private func addExercises(from template: WorkoutTemplate) {
+        guard let ws = workingSession else { return }
+        let startOrder = ws.exercises.count
+        for (i, te) in template.exercises.sorted(by: { $0.order < $1.order }).enumerated() {
+            let exercise = Exercise(name: te.name, order: startOrder + i)
+            modelContext.insert(exercise)
+            let set = WorkoutSet(
+                reps: te.defaultReps ?? 0,
+                weight: te.defaultWeight ?? 0,
+                unit: te.defaultWeightUnit,
+                order: 0
+            )
+            modelContext.insert(set)
+            exercise.sets.append(set)
+            ws.exercises.append(exercise)
+        }
+    }
+}
+
+// MARK: - TemplatePickerSheet
+
+private struct TemplatePickerSheet: View {
+    let onSelect: (WorkoutTemplate) -> Void
+
+    @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if templates.isEmpty {
+                    ContentUnavailableView(
+                        "No Templates",
+                        systemImage: "list.bullet.rectangle",
+                        description: Text("Create a template first to add exercises from it.")
+                    )
+                } else {
+                    List(templates) { template in
+                        Button {
+                            onSelect(template)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(template.name)
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                                Text("\(template.workoutTypeDisplayName) · \(template.exercises.count) exercises")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Add from Template")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
         }
     }
 }
