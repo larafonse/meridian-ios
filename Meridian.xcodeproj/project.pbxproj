@@ -45,6 +45,7 @@
 		EDFFBF06047C8B84D1EDF876 /* PlayfairDisplay-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C3888A41B7FDCAB12EE0DA9 /* PlayfairDisplay-Regular.ttf */; };
 		FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B82395EF2A3509D357589C5 /* WeightStats.swift */; };
 		FF0D1D78CC28F72D4F309C06 /* WorkoutSessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E23E3F84AECBE3EB5C10E5 /* WorkoutSessionService.swift */; };
+		FF8800AA11BB22CC33DD44EE /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE77FF8800AA11BB22CC33DD /* WorkoutType.swift */; };
 		FF48F34B0969A6CA99220549 /* WorkoutSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEAA79051486999B45C8259 /* WorkoutSessionTests.swift */; };
 		AA11BB22CC33DD44EE55FF66 /* WorkoutMetricsAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22CC33DD44EE55FF6600AA /* WorkoutMetricsAccumulator.swift */; };
 		CC33DD44EE55FF6600AABB22 /* WorkoutMetricsAccumulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD44EE55FF6600AABB22CC33 /* WorkoutMetricsAccumulatorTests.swift */; };
@@ -105,6 +106,7 @@
 		EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F11D058072A578ED7BEBD86D /* WorkoutRouteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteMapView.swift; sourceTree = "<group>"; };
 		F2014C059C12A72AA1C0083D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EE77FF8800AA11BB22CC33DD /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		F8D91AD1C2423A0DC7E039DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -187,6 +189,7 @@
 				9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */,
 				C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */,
 				000D085771CDB27AE2B446E3 /* WorkoutTemplate.swift */,
+				EE77FF8800AA11BB22CC33DD /* WorkoutType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				FF0D1D78CC28F72D4F309C06 /* WorkoutSessionService.swift in Sources */,
 				AA11BB22CC33DD44EE55FF66 /* WorkoutMetricsAccumulator.swift in Sources */,
 				A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */,
+				FF8800AA11BB22CC33DD44EE /* WorkoutType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
