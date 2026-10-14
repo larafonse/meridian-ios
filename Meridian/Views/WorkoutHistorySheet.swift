@@ -6,6 +6,9 @@ struct WorkoutHistorySheet: View {
     let displayName: String
 
     @Query private var allSessions: [WorkoutSession]
+    @State private var routeWorkoutUUID: UUID?
+
+    private let gpsWorkoutTypes: Set<String> = ["cycling", "running", "walking"]
 
     private var sessions: [WorkoutSession] {
         allSessions
@@ -49,6 +52,17 @@ struct WorkoutHistorySheet: View {
                                 }
                             }
                             Spacer()
+                            if gpsWorkoutTypes.contains(session.workoutType),
+                               let uuid = session.healthKitUUID {
+                                Button {
+                                    routeWorkoutUUID = uuid
+                                } label: {
+                                    Image(systemName: "map")
+                                        .font(.system(size: 14))
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                            }
                             Text(session.durationFormatted)
                                 .font(.system(size: 12, design: .monospaced))
                                 .foregroundStyle(.secondary)
@@ -57,6 +71,14 @@ struct WorkoutHistorySheet: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .sheet(isPresented: Binding(
+                get: { routeWorkoutUUID != nil },
+                set: { if !$0 { routeWorkoutUUID = nil } }
+            )) {
+                if let uuid = routeWorkoutUUID {
+                    WorkoutRouteMapView(workoutUUID: uuid)
+                }
+            }
             .navigationTitle(displayName)
             .navigationBarTitleDisplayMode(.inline)
         }
