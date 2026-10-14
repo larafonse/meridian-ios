@@ -6,11 +6,13 @@ import Combine
 @MainActor
 final class WorkoutSessionService: NSObject, ObservableObject {
     @Published var currentBPM: Int? = nil
+    @Published private(set) var metrics: WorkoutMetricsAccumulator?
 
     private let store = HKHealthStore()
     private var builder: HKWorkoutBuilder?
     private var hrQuery: HKAnchoredObjectQuery?
     private var workoutStartDate: Date?
+    private var workoutActivityType: HKWorkoutActivityType?
 
     private var locationManager: CLLocationManager?
     private var routeBuilder: HKWorkoutRouteBuilder?
@@ -24,13 +26,25 @@ final class WorkoutSessionService: NSObject, ObservableObject {
         stopLocationTracking()
         builder = nil
         workoutStartDate = nil
+        workoutActivityType = nil
         currentBPM = nil
         routeBuilder = nil
+        metrics = nil
     }
 
     func start(configuration: HKWorkoutConfiguration) async throws {
         let startDate = Date()
         workoutStartDate = startDate
+        workoutActivityType = configuration.activityType
+
+        let (bodyMassKg, ageYears, isMale) = await fetchUserProfile()
+        metrics = WorkoutMetricsAccumulator(
+            activityType: configuration.activityType,
+            bodyMassKg: bodyMassKg,
+            ageYears: ageYears,
+            isMale: isMale
+        )
+
         let builder = HKWorkoutBuilder(healthStore: store, configuration: configuration, device: .local())
         self.builder = builder
         try await builder.beginCollection(at: startDate)
@@ -41,18 +55,49 @@ final class WorkoutSessionService: NSObject, ObservableObject {
     }
 
     /// Returns the saved HKWorkout UUID, or nil if HealthKit write fails.
-    func finish() async throws -> UUID? {
+    /// Also returns final distance and calorie values for saving to the model.
+    func finish() async throws -> (uuid: UUID?, distanceMeters: Double?, activeCalories: Double?) {
         let endDate = Date()
-        guard let builder else { return nil }
+        guard let builder else { return (nil, nil, nil) }
 
         stopHeartRateObserver()
         stopLocationTracking()
+
+        let finalDistance = metrics?.distanceMeters
+        let finalCalories = metrics?.activeCalories
 
         if let start = workoutStartDate {
             let hrSamples = await fetchHeartRateSamples(from: start, to: endDate)
             if !hrSamples.isEmpty {
                 try? await builder.addSamples(hrSamples)
             }
+        }
+
+        // Write distance + calorie samples before ending collection
+        var statSamples: [HKSample] = []
+        if let kcal = finalCalories, kcal > 0 {
+            let energySample = HKQuantitySample(
+                type: HKQuantityType(.activeEnergyBurned),
+                quantity: HKQuantity(unit: .kilocalorie(), doubleValue: kcal),
+                start: workoutStartDate ?? endDate,
+                end: endDate
+            )
+            statSamples.append(energySample)
+        }
+        if let metres = finalDistance, metres > 0, let activityType = workoutActivityType {
+            let distanceType: HKQuantityType = activityType == .cycling
+                ? HKQuantityType(.distanceCycling)
+                : HKQuantityType(.distanceWalkingRunning)
+            let distanceSample = HKQuantitySample(
+                type: distanceType,
+                quantity: HKQuantity(unit: .meter(), doubleValue: metres),
+                start: workoutStartDate ?? endDate,
+                end: endDate
+            )
+            statSamples.append(distanceSample)
+        }
+        if !statSamples.isEmpty {
+            try? await builder.addSamples(statSamples)
         }
 
         do {
@@ -63,14 +108,49 @@ final class WorkoutSessionService: NSObject, ObservableObject {
             }
             self.builder = nil
             self.routeBuilder = nil
+            self.metrics = nil
             workoutStartDate = nil
-            return workout?.uuid
+            workoutActivityType = nil
+            return (workout?.uuid, finalDistance, finalCalories)
         } catch {
             self.builder = nil
             self.routeBuilder = nil
+            self.metrics = nil
             workoutStartDate = nil
-            return nil
+            workoutActivityType = nil
+            return (nil, nil, nil)
         }
+    }
+
+    // MARK: - User profile
+
+    private func fetchUserProfile() async -> (bodyMassKg: Double?, ageYears: Int?, isMale: Bool?) {
+        guard HKHealthStore.isHealthDataAvailable() else { return (nil, nil, nil) }
+
+        let bodyMassKg: Double? = await withCheckedContinuation { continuation in
+            let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+            let query = HKSampleQuery(
+                sampleType: HKQuantityType(.bodyMass),
+                predicate: nil,
+                limit: 1,
+                sortDescriptors: [sort]
+            ) { _, samples, _ in
+                let kg = (samples?.first as? HKQuantitySample)?
+                    .quantity.doubleValue(for: .gramUnit(with: .kilo))
+                continuation.resume(returning: kg)
+            }
+            store.execute(query)
+        }
+
+        let ageYears: Int? = try? store.dateOfBirthComponents().date
+            .map { Calendar.current.dateComponents([.year], from: $0, to: Date()).year ?? 0 }
+
+        let isMale: Bool? = try? {
+            let sex = try store.biologicalSex().biologicalSex
+            return sex == .male ? true : sex == .female ? false : nil
+        }()
+
+        return (bodyMassKg, ageYears, isMale)
     }
 
     // MARK: - GPS
@@ -120,7 +200,11 @@ final class WorkoutSessionService: NSObject, ObservableObject {
     private func handleHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample], !samples.isEmpty else { return }
         let latest = samples.max(by: { $0.endDate < $1.endDate })
-        currentBPM = latest.map { Int($0.quantity.doubleValue(for: HKUnit(from: "count/min"))) }
+        if let latest {
+            let bpm = Int(latest.quantity.doubleValue(for: HKUnit(from: "count/min")))
+            currentBPM = bpm
+            metrics?.addHeartRateSample(bpm: bpm, at: latest.endDate)
+        }
     }
 
     private func fetchHeartRateSamples(from start: Date, to end: Date) async -> [HKSample] {
@@ -143,6 +227,7 @@ extension WorkoutSessionService: CLLocationManagerDelegate {
         let valid = WorkoutSessionService.validLocations(locations)
         guard !valid.isEmpty else { return }
         Task { @MainActor [weak self] in
+            self?.metrics?.addLocations(valid)
             try? await self?.routeBuilder?.insertRouteData(valid)
         }
     }

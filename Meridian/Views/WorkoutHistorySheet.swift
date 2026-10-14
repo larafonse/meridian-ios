@@ -52,6 +52,17 @@ struct WorkoutHistorySheet: View {
                                 }
                             }
                             Spacer()
+                            if let kcal = session.activeCalories, kcal > 0 {
+                                Text("\(Int(kcal)) kcal")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                            }
+                            if gpsWorkoutTypes.contains(session.workoutType),
+                               let metres = session.distanceMeters, metres > 0 {
+                                Text(String(format: "%.2f km", metres / 1000))
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                            }
                             if gpsWorkoutTypes.contains(session.workoutType),
                                let uuid = session.healthKitUUID {
                                 Button {

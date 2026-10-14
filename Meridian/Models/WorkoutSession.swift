@@ -10,6 +10,8 @@ final class WorkoutSession {
     var label: String
     var startedAt: Date
     var endedAt: Date?
+    var distanceMeters: Double?
+    var activeCalories: Double?
 
     @Relationship(deleteRule: .cascade)
     var exercises: [Exercise]
@@ -21,6 +23,8 @@ final class WorkoutSession {
         self.label = label
         self.startedAt = startedAt
         self.endedAt = nil
+        self.distanceMeters = nil
+        self.activeCalories = nil
         self.exercises = []
     }
 
