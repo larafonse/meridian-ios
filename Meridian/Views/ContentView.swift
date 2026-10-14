@@ -13,9 +13,9 @@ struct ContentView: View {
                 .tabItem {
                     Label("Routes", systemImage: "map")
                 }
-            LogView()
+            ActivitiesView()
                 .tabItem {
-                    Label("Log", systemImage: "list.bullet")
+                    Label("Activities", systemImage: "figure.run")
                 }
         }
         .tint(Color(red: 0.04, green: 0.04, blue: 0.04))
