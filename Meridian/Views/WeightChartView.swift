@@ -10,11 +10,11 @@ struct WeightChartView: View {
     private var stats: WeightStats { computeStats(entries: entries) }
 
     private var chartData: [WeightEntry] {
-        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(3))
+        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(7))
     }
 
     private var lineData: [WeightEntry] {
-        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(4))
+        Array(entries.sorted { $0.recordedAt < $1.recordedAt }.suffix(8))
     }
 
     var body: some View {
@@ -96,6 +96,11 @@ struct WeightChartView: View {
                     .foregroundStyle(Color(red: 0.42, green: 0.45, blue: 0.50))
             }
         }
+        .chartXScale(domain: {
+            let start = lineData.first?.recordedAt ?? .now
+            let end = lineData.last?.recordedAt ?? .now
+            return start...end
+        }())
         .chartYScale(domain: {
             let weights = lineData.map(\.weight)
             let min = (weights.min() ?? 0) - 2
