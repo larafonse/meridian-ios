@@ -26,7 +26,7 @@ struct TemplatesPortfolioCard: View {
         VStack(alignment: .leading, spacing: 0) {
             Button(action: onTapAll) {
                 HStack {
-                    Text("Templates")
+                    Text("Stats")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.secondary)
                     Spacer()
