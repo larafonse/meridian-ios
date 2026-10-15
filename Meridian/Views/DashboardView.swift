@@ -8,7 +8,6 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WeightEntry.recordedAt, order: .reverse) private var entries: [WeightEntry]
     @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
-    @State private var showingAddSheet = false
     @State private var showingWeightLog = false
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
@@ -79,12 +78,6 @@ struct DashboardView: View {
                         onTapTemplate: { detailTemplate = $0 }
                     )
 
-                    ActivitiesCard(
-                        activeWorkout: $activeWorkout,
-                        hkWorkouts: hkWorkouts,
-                        onStart: { showingStartWorkout = true },
-                        onResume: { showingActiveWorkout = true }
-                    )
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -99,9 +92,6 @@ struct DashboardView: View {
             cleanupOrphanedSessions()
             cleanupOrphanedScores()
             backfillMissingScores()
-        }
-        .sheet(isPresented: $showingAddSheet) {
-            AddEntrySheet()
         }
         .sheet(isPresented: $showingWeightLog) {
             WeightLogSheet()
@@ -189,7 +179,7 @@ struct DashboardView: View {
 
     private var addButton: some View {
         Button {
-            showingAddSheet = true
+            showingStartWorkout = true
         } label: {
             Image(systemName: "plus")
                 .font(.system(size: 20, weight: .semibold))

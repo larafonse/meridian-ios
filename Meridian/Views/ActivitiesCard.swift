@@ -77,7 +77,6 @@ struct WorkoutListItem: Identifiable {
 struct ActivitiesCard: View {
     @Binding var activeWorkout: WorkoutSession?
     let hkWorkouts: [HKWorkout]
-    let onStart: () -> Void
     let onResume: () -> Void
 
     @Query private var allSessions: [WorkoutSession]
@@ -108,18 +107,6 @@ struct ActivitiesCard: View {
                     .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
 
                 Spacer()
-
-                if activeWorkout == nil {
-                    Button(action: onStart) {
-                        Label("Start Workout", systemImage: "plus")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(Color(red: 0.04, green: 0.04, blue: 0.04))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                }
             }
 
             if let active = activeWorkout {
