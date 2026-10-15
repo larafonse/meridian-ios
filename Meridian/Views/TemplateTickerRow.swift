@@ -18,6 +18,7 @@ struct TemplateTickerRow: View {
 
     private var recentScores: [Double] {
         let raw = Array(scores.suffix(10).map { $0.totalVolume })
+        if raw.isEmpty { return [0, 0] }
         return raw.count == 1 ? [0] + raw : raw
     }
 
@@ -38,9 +39,7 @@ struct TemplateTickerRow: View {
 
             Spacer()
 
-            if !recentScores.isEmpty {
-                SparklineView(values: recentScores)
-            }
+            SparklineView(values: recentScores)
 
             if let volume = latestVolume {
                 Text(formatVolume(volume))
