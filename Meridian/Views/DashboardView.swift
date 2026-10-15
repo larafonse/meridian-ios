@@ -97,6 +97,7 @@ struct DashboardView: View {
         .task { await loadHKWorkouts() }
         .onAppear {
             cleanupOrphanedSessions()
+            cleanupOrphanedScores()
             backfillMissingScores()
         }
         .sheet(isPresented: $showingAddSheet) {
@@ -147,6 +148,18 @@ struct DashboardView: View {
         for session in orphanedSessions {
             modelContext.delete(session)
         }
+    }
+
+    private func cleanupOrphanedScores() {
+        guard let allSessions = try? modelContext.fetch(FetchDescriptor<WorkoutSession>()),
+              let allScores = try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>()) else { return }
+        let existingSessionIDs = Set(allSessions.map(\.id))
+        var didDelete = false
+        for score in allScores where !existingSessionIDs.contains(score.sessionID) {
+            modelContext.delete(score)
+            didDelete = true
+        }
+        if didDelete { try? modelContext.save() }
     }
 
     private func backfillMissingScores() {
