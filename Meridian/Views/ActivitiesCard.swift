@@ -209,6 +209,10 @@ struct ActivitiesCard: View {
 
     private func deleteSession(for item: WorkoutListItem) {
         guard let session = item.session else { return }
+        let scores = (try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>())) ?? []
+        for score in scores where score.sessionID == session.id {
+            modelContext.delete(score)
+        }
         modelContext.delete(session)
         try? modelContext.save()
     }
