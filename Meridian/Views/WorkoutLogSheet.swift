@@ -10,10 +10,13 @@ struct WorkoutLogSheet: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var allTemplates: [WorkoutTemplate]
+
     @State private var workingSession: WorkoutSession? = nil
     @State private var newExerciseName: String = ""
     @State private var showingAddExercise = false
     @State private var showingTemplatePicker = false
+    @State private var showingLinkTemplate = false
     @State private var showingHKPicker = false
     @State private var hkWorkoutsForPicker: [HKWorkout] = []
 
@@ -24,6 +27,11 @@ struct WorkoutLogSheet: View {
         return hkWorkout?.workoutActivityType.meridianDisplayName ?? "Workout"
     }
 
+    private var linkedTemplate: WorkoutTemplate? {
+        guard let id = workingSession?.templateID else { return nil }
+        return allTemplates.first { $0.id == id }
+    }
+
     private var subtitle: String {
         let date = workingSession?.startedAt ?? hkWorkout?.startDate ?? Date()
         return date.formatted(date: .abbreviated, time: .shortened)
@@ -32,6 +40,25 @@ struct WorkoutLogSheet: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Button {
+                        if workingSession == nil { ensureSession() }
+                        showingLinkTemplate = true
+                    } label: {
+                        HStack {
+                            Text("Template")
+                                .foregroundStyle(Color(red: 0.04, green: 0.04, blue: 0.04))
+                            Spacer()
+                            Text(linkedTemplate?.name ?? "None")
+                                .foregroundStyle(.secondary)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 if let ws = workingSession {
                     let sortedExercises = ws.exercises.sorted { $0.order < $1.order }
 
@@ -142,6 +169,12 @@ struct WorkoutLogSheet: View {
                     showingTemplatePicker = false
                 }
             }
+            .sheet(isPresented: $showingLinkTemplate) {
+                TemplatePickerSheet { template in
+                    linkToStats(template: template)
+                    showingLinkTemplate = false
+                }
+            }
             .sheet(isPresented: $showingHKPicker) {
                 HKWorkoutPickerSheet(workouts: hkWorkoutsForPicker) { selected in
                     linkSession(to: selected)
@@ -218,6 +251,25 @@ struct WorkoutLogSheet: View {
         Task {
             hkWorkoutsForPicker = (try? await HealthKitWorkoutService().fetchRecentWorkouts(limit: 20)) ?? []
         }
+    }
+
+    private func linkToStats(template: WorkoutTemplate) {
+        guard let ws = workingSession else { return }
+        ws.templateID = template.id
+        // Remove any existing score for this session before inserting the new one
+        let existing = (try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>())) ?? []
+        for score in existing where score.sessionID == ws.id {
+            modelContext.delete(score)
+        }
+        let score = TemplateWorkoutScore(
+            templateID: template.id,
+            templateName: template.name,
+            sessionID: ws.id,
+            date: ws.endedAt ?? ws.startedAt,
+            totalVolume: totalVolumeInLbs(session: ws)
+        )
+        modelContext.insert(score)
+        try? modelContext.save()
     }
 
     private func linkSession(to hkWorkout: HKWorkout) {
