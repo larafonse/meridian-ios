@@ -13,6 +13,7 @@ struct DashboardView: View {
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
     @State private var showingTemplates = false
+    @State private var detailTemplate: WorkoutTemplate? = nil
     // activeWorkout is @State (not persisted). If the OS terminates the process while a
     // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
@@ -73,9 +74,10 @@ struct DashboardView: View {
                             .frame(maxWidth: .infinity)
                     }
 
-                    TemplatesPortfolioCard {
-                        showingTemplates = true
-                    }
+                    TemplatesPortfolioCard(
+                        onTapAll: { showingTemplates = true },
+                        onTapTemplate: { detailTemplate = $0 }
+                    )
 
                     ActivitiesCard(
                         activeWorkout: $activeWorkout,
@@ -102,6 +104,9 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingTemplates) {
             TemplateListSheet()
+        }
+        .sheet(item: $detailTemplate) { template in
+            TemplateDetailSheet(template: template)
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }

@@ -3,6 +3,7 @@ import SwiftData
 
 struct TemplatesPortfolioCard: View {
     let onTapAll: () -> Void
+    let onTapTemplate: (WorkoutTemplate) -> Void
 
     @Query(sort: \TemplateWorkoutScore.date, order: .reverse) private var scores: [TemplateWorkoutScore]
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
@@ -22,8 +23,8 @@ struct TemplatesPortfolioCard: View {
     }
 
     var body: some View {
-        Button(action: onTapAll) {
-            VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
+            Button(action: onTapAll) {
                 HStack {
                     Text("Templates")
                         .font(.system(size: 13, weight: .semibold))
@@ -34,32 +35,36 @@ struct TemplatesPortfolioCard: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(.bottom, 8)
+            }
+            .buttonStyle(.plain)
 
-                if topTemplates.isEmpty {
-                    Text("Complete a workout from a template to see your history here.")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.secondary)
-                        .padding(.vertical, 8)
-                } else {
-                    VStack(spacing: 0) {
-                        ForEach(topTemplates) { template in
+            if topTemplates.isEmpty {
+                Text("Complete a workout from a template to see your history here.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 8)
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(topTemplates) { template in
+                        Button { onTapTemplate(template) } label: {
                             TemplateTickerRow(template: template)
-                            if template.id != topTemplates.last?.id {
-                                Divider()
-                            }
+                        }
+                        .buttonStyle(.plain)
+
+                        if template.id != topTemplates.last?.id {
+                            Divider()
                         }
                     }
                 }
             }
-            .padding(12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.white)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
-            )
         }
-        .buttonStyle(.plain)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
+        )
     }
 }
