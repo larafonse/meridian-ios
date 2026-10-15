@@ -21,22 +21,15 @@ struct StatsPortfolioCard: View {
             }
             .buttonStyle(.plain)
 
-            if items.isEmpty {
-                Text("Complete a workout from a template to see your history here.")
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 8)
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(items) { item in
-                        Button { onTapStat(item) } label: {
-                            StatRowView(item: item)
-                        }
-                        .buttonStyle(.plain)
+            VStack(spacing: 0) {
+                ForEach(items) { item in
+                    Button { onTapStat(item) } label: {
+                        StatRowView(item: item)
+                    }
+                    .buttonStyle(.plain)
 
-                        if item.id != items.last?.id {
-                            Divider()
-                        }
+                    if item.id != items.last?.id {
+                        Divider()
                     }
                 }
             }

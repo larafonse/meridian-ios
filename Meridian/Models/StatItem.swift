@@ -18,6 +18,13 @@ enum StatDetail {
 
 extension StatItem {
     private static let weightID = UUID()
+    private static let weightFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 1
+        f.maximumFractionDigits = 1
+        f.locale = Locale(identifier: "en_US")
+        return f
+    }()
 
     static func forWeight(entries: [WeightEntry]) -> StatItem {
         let sorted = entries.sorted { $0.recordedAt < $1.recordedAt }
@@ -25,10 +32,7 @@ extension StatItem {
         let sparkline: [Double] = raw.isEmpty ? [0, 0] : (raw.count == 1 ? [0] + raw : raw)
         let latestValue: String = {
             guard let last = sorted.last else { return "--" }
-            let f = NumberFormatter()
-            f.minimumFractionDigits = 1
-            f.maximumFractionDigits = 1
-            let formatted = f.string(from: NSNumber(value: last.weight)) ?? "\(last.weight)"
+            let formatted = weightFormatter.string(from: NSNumber(value: last.weight)) ?? "\(last.weight)"
             return "\(formatted) \(last.unit)"
         }()
         return StatItem(id: weightID, ticker: "WGHT", name: "Body Weight",
@@ -39,6 +43,14 @@ extension StatItem {
 // MARK: - Template builder
 
 extension StatItem {
+    private static let volumeFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.maximumFractionDigits = 0
+        f.locale = Locale(identifier: "en_US")
+        return f
+    }()
+
     static func forTemplate(_ template: WorkoutTemplate, scores: [TemplateWorkoutScore]) -> StatItem {
         let sorted = scores
             .filter { $0.templateID == template.id }
@@ -47,10 +59,7 @@ extension StatItem {
         let sparkline: [Double] = raw.isEmpty ? [0, 0] : (raw.count == 1 ? [0] + raw : raw)
         let latestValue: String = {
             guard let last = sorted.last else { return "--" }
-            let f = NumberFormatter()
-            f.numberStyle = .decimal
-            f.maximumFractionDigits = 0
-            let formatted = f.string(from: NSNumber(value: last.totalVolume)) ?? "\(Int(last.totalVolume))"
+            let formatted = volumeFormatter.string(from: NSNumber(value: last.totalVolume)) ?? "\(Int(last.totalVolume))"
             return "\(formatted) lbs"
         }()
         return StatItem(
