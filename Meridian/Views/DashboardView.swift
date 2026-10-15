@@ -10,10 +10,13 @@ struct DashboardView: View {
     @Query(sort: \TemplateWorkoutScore.date, order: .forward) private var allScores: [TemplateWorkoutScore]
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
     @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
+    @Query(sort: \DashboardCard.sortOrder, order: .forward) private var dashboardCards: [DashboardCard]
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
     @State private var showingTemplates = false
     @State private var selectedStat: StatItem? = nil
+    @State private var showingCardEditor = false
+    @State private var editingCard: DashboardCard? = nil
     // activeWorkout is @State (not persisted). If the OS terminates the process while a
     // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
@@ -40,6 +43,17 @@ struct DashboardView: View {
 
         let templateItems = topTemplates.map { StatItem.forTemplate($0, scores: allScores) }
         return [weightItem] + templateItems
+    }
+
+    // All available stats — used for the card editor and resolving custom card items
+    private var allStatItems: [StatItem] {
+        let weightItem = StatItem.forWeight(entries: Array(entries))
+        let templateItems = templates.map { StatItem.forTemplate($0, scores: allScores) }
+        return [weightItem] + templateItems
+    }
+
+    private func items(for card: DashboardCard) -> [StatItem] {
+        allStatItems.filter { card.statTickers.contains($0.ticker) }
     }
     @State private var hkWorkouts: [HKWorkout] = []
     @State private var stepCount: Int = 0
@@ -80,6 +94,26 @@ struct DashboardView: View {
                                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
                         )
 
+                    ForEach(dashboardCards) { card in
+                        let cardItems = items(for: card)
+                        if !cardItems.isEmpty {
+                            StatsPortfolioCard(
+                                items: cardItems,
+                                title: card.name,
+                                onTapStat: { selectedStat = $0 },
+                                onEdit: {
+                                    editingCard = card
+                                    showingCardEditor = true
+                                },
+                                onDelete: {
+                                    modelContext.delete(card)
+                                }
+                            )
+                        }
+                    }
+
+                    addCardButton
+
                     StatsPortfolioCard(
                         items: statItems,
                         onTapAll: { showingTemplates = true },
@@ -103,6 +137,13 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingTemplates) {
             TemplateListSheet()
+        }
+        .sheet(isPresented: $showingCardEditor, onDismiss: { editingCard = nil }) {
+            CardEditorSheet(
+                availableStats: allStatItems,
+                existingCard: editingCard,
+                nextSortOrder: (dashboardCards.map(\.sortOrder).max() ?? -1) + 1
+            )
         }
         .sheet(item: $selectedStat) { stat in
             switch stat.detail {
@@ -185,6 +226,33 @@ struct DashboardView: View {
             didInsert = true
         }
         if didInsert { try? modelContext.save() }
+    }
+
+    private var addCardButton: some View {
+        Button {
+            editingCard = nil
+            showingCardEditor = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "plus")
+                    .font(.system(size: 12, weight: .semibold))
+                Text("Add Card")
+                    .font(.system(size: 13, weight: .semibold))
+            }
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color.white.opacity(0.5))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                        Color(red: 0.898, green: 0.898, blue: 0.898),
+                        style: StrokeStyle(lineWidth: 1, dash: [6, 4])
+                    )
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var addButton: some View {
