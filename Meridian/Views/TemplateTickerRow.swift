@@ -17,7 +17,8 @@ struct TemplateTickerRow: View {
     }
 
     private var recentScores: [Double] {
-        Array(scores.suffix(10).map { $0.totalVolume })
+        let raw = Array(scores.suffix(10).map { $0.totalVolume })
+        return raw.count == 1 ? [0] + raw : raw
     }
 
     private var latestVolume: Double? {
