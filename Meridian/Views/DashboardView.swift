@@ -7,16 +7,40 @@ import HealthKit
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WeightEntry.recordedAt, order: .reverse) private var entries: [WeightEntry]
+    @Query(sort: \TemplateWorkoutScore.date, order: .forward) private var allScores: [TemplateWorkoutScore]
+    @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
     @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
-    @State private var showingWeightLog = false
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
     @State private var showingTemplates = false
-    @State private var detailTemplate: WorkoutTemplate? = nil
+    @State private var selectedStat: StatItem? = nil
     // activeWorkout is @State (not persisted). If the OS terminates the process while a
     // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
     @State private var activeWorkout: WorkoutSession? = nil
+
+    private var statItems: [StatItem] {
+        let weightItem = StatItem.forWeight(entries: Array(entries))
+
+        var seen = Set<UUID>()
+        let recentIDs = allScores.reversed().compactMap { score -> UUID? in
+            guard !seen.contains(score.templateID) else { return nil }
+            seen.insert(score.templateID)
+            return score.templateID
+        }.prefix(3)
+
+        var topTemplates = recentIDs.compactMap { id in
+            templates.first(where: { $0.id == id })
+        }
+        if topTemplates.count < 3 {
+            let usedIDs = Set(topTemplates.map(\.id))
+            let unscored = templates.filter { !usedIDs.contains($0.id) }
+            topTemplates += Array(unscored.prefix(3 - topTemplates.count))
+        }
+
+        let templateItems = topTemplates.map { StatItem.forTemplate($0, scores: allScores) }
+        return [weightItem] + templateItems
+    }
     @State private var hkWorkouts: [HKWorkout] = []
     @State private var stepCount: Int = 0
     @State private var distanceMeters: Double = 0
@@ -46,36 +70,20 @@ struct DashboardView: View {
 
                     ActivityRingsWidget()
 
-                    HStack(spacing: 12) {
-                        Button { showingWeightLog = true } label: {
-                            WeightChartView(entries: entries)
-                                .padding(12)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        }
-                        .buttonStyle(.plain)
+                    StepsDistanceCardView(stepCount: stepCount, distanceMeters: distanceMeters)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                         .background(Color.white)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
                         )
-                        .frame(maxWidth: .infinity)
 
-                        StepsDistanceCardView(stepCount: stepCount, distanceMeters: distanceMeters)
-                            .padding(12)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color(red: 0.898, green: 0.898, blue: 0.898), lineWidth: 1)
-                            )
-                            .frame(maxWidth: .infinity)
-                    }
-
-                    TemplatesPortfolioCard(
+                    StatsPortfolioCard(
+                        items: statItems,
                         onTapAll: { showingTemplates = true },
-                        onTapTemplate: { detailTemplate = $0 }
+                        onTapStat: { selectedStat = $0 }
                     )
 
                 }
@@ -93,14 +101,16 @@ struct DashboardView: View {
             cleanupOrphanedScores()
             backfillMissingScores()
         }
-        .sheet(isPresented: $showingWeightLog) {
-            WeightLogSheet()
-        }
         .sheet(isPresented: $showingTemplates) {
             TemplateListSheet()
         }
-        .sheet(item: $detailTemplate) { template in
-            TemplateDetailSheet(template: template)
+        .sheet(item: $selectedStat) { stat in
+            switch stat.detail {
+            case .weight:
+                WeightDetailSheet()
+            case .template(let template):
+                TemplateDetailSheet(template: template)
+            }
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }

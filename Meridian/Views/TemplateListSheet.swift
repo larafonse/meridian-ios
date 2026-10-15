@@ -44,7 +44,7 @@ struct TemplateListSheet: View {
                             Button {
                                 selectedTemplate = template
                             } label: {
-                                TemplateTickerRow(template: template)
+                                StatRowView(item: StatItem.forTemplate(template, scores: Array(scores)))
                             }
                             .buttonStyle(.plain)
                         }

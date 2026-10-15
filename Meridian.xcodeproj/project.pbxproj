@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		01CFAC71B126B34B1D960F27 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC1F779EC4E1E7AF6CBF8F36 /* Preview Assets.xcassets */; };
-		02848C6F42F29E5F406A5D7B /* TemplatesPortfolioCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A360A4FAF849844AC5E752 /* TemplatesPortfolioCard.swift */; };
 		0956B5F8B791F8616C24462D /* TemplateWorkoutScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3D8A80946F7EA199F52D08 /* TemplateWorkoutScore.swift */; };
 		0DB38CEF5116B41755169122 /* WorkoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */; };
 		0E7B696174AF557CCFF41B6D /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD1E3859CB7A82FB07FF53D /* ActivitiesView.swift */; };
@@ -46,7 +45,6 @@
 		A24F253973C5E9BA4F042DD9 /* WorkoutLinkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1C4C83AAEF55861606684D /* WorkoutLinkerTests.swift */; };
 		A5594E6EC658187E60DEEF9C /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000D085771CDB27AE2B446E3 /* WorkoutTemplate.swift */; };
 		B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */; };
-		C2680C8B4D9C111B07731BA7 /* TemplateTickerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644C09DAC6373EF9346CF62C /* TemplateTickerRow.swift */; };
 		C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */; };
 		C8C380C45E31114950096E0B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2014C059C12A72AA1C0083D /* ContentView.swift */; };
 		CAC38E423557D8BBA874D8DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */; };
@@ -90,10 +88,8 @@
 		5D0D060BB9FDFE910AC35B57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E03E0B2B56607172C42B3EF /* RouteCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCacheTests.swift; sourceTree = "<group>"; };
 		62DB356B259500A68AF084EF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		644C09DAC6373EF9346CF62C /* TemplateTickerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateTickerRow.swift; sourceTree = "<group>"; };
 		6811A597323349D9F89251A0 /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteService.swift; sourceTree = "<group>"; };
-		70A360A4FAF849844AC5E752 /* TemplatesPortfolioCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesPortfolioCard.swift; sourceTree = "<group>"; };
 		73EFB0BADE44BAB86B9B774F /* RouteSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSyncService.swift; sourceTree = "<group>"; };
 		75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntrySheet.swift; sourceTree = "<group>"; };
 		7B9967BBA3B244AF512A78BC /* WeightLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLogSheet.swift; sourceTree = "<group>"; };
@@ -239,8 +235,6 @@
 				8F4729A5504C0879F0C6EE8A /* TemplateDetailSheet.swift */,
 				2C33262722FB70FAFD5880BC /* TemplateEditorSheet.swift */,
 				837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */,
-				70A360A4FAF849844AC5E752 /* TemplatesPortfolioCard.swift */,
-				644C09DAC6373EF9346CF62C /* TemplateTickerRow.swift */,
 				DC33FBFA10A43FB7497FE354 /* WeightChartView.swift */,
 				9667EE4DB4D9ADED37C2F109 /* WeightDetailSheet.swift */,
 				7B9967BBA3B244AF512A78BC /* WeightLogSheet.swift */,
@@ -392,9 +386,7 @@
 				D3AE8A0DB0394CF508C9B6CC /* TemplateDetailSheet.swift in Sources */,
 				1D74A1325B0AC924B8D859B7 /* TemplateEditorSheet.swift in Sources */,
 				4DE7F28D02691171EBDB2712 /* TemplateListSheet.swift in Sources */,
-				C2680C8B4D9C111B07731BA7 /* TemplateTickerRow.swift in Sources */,
 				0956B5F8B791F8616C24462D /* TemplateWorkoutScore.swift in Sources */,
-				02848C6F42F29E5F406A5D7B /* TemplatesPortfolioCard.swift in Sources */,
 				C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */,
 				8845B788310BA6CEEECB80A5 /* WeightDetailSheet.swift in Sources */,
 				B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */,
