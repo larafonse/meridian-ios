@@ -13,6 +13,7 @@ struct DashboardView: View {
     @State private var showingStartWorkout = false
     @State private var showingActiveWorkout = false
     @State private var showingTemplates = false
+    @State private var detailTemplate: WorkoutTemplate? = nil
     // activeWorkout is @State (not persisted). If the OS terminates the process while a
     // workout is active, this reference is lost and the orphaned WorkoutSession (endedAt == nil)
     // is cleaned up on next launch via cleanupOrphanedSessions(). This is an accepted limitation.
@@ -73,9 +74,10 @@ struct DashboardView: View {
                             .frame(maxWidth: .infinity)
                     }
 
-                    TemplatesPortfolioCard {
-                        showingTemplates = true
-                    }
+                    TemplatesPortfolioCard(
+                        onTapAll: { showingTemplates = true },
+                        onTapTemplate: { detailTemplate = $0 }
+                    )
 
                     ActivitiesCard(
                         activeWorkout: $activeWorkout,
@@ -93,7 +95,11 @@ struct DashboardView: View {
             addButton
         }
         .task { await loadHKWorkouts() }
-        .onAppear { cleanupOrphanedSessions() }
+        .onAppear {
+            cleanupOrphanedSessions()
+            cleanupOrphanedScores()
+            backfillMissingScores()
+        }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
         }
@@ -102,6 +108,9 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingTemplates) {
             TemplateListSheet()
+        }
+        .sheet(item: $detailTemplate) { template in
+            TemplateDetailSheet(template: template)
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }
@@ -139,6 +148,43 @@ struct DashboardView: View {
         for session in orphanedSessions {
             modelContext.delete(session)
         }
+    }
+
+    private func cleanupOrphanedScores() {
+        guard let allSessions = try? modelContext.fetch(FetchDescriptor<WorkoutSession>()),
+              let allScores = try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>()) else { return }
+        let existingSessionIDs = Set(allSessions.map(\.id))
+        var didDelete = false
+        for score in allScores where !existingSessionIDs.contains(score.sessionID) {
+            modelContext.delete(score)
+            didDelete = true
+        }
+        if didDelete { try? modelContext.save() }
+    }
+
+    private func backfillMissingScores() {
+        guard let allSessions = try? modelContext.fetch(FetchDescriptor<WorkoutSession>()) else { return }
+        let completedTemplateSessions = allSessions.filter { $0.templateID != nil && $0.endedAt != nil }
+        guard !completedTemplateSessions.isEmpty else { return }
+
+        let existingScores = (try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>())) ?? []
+        let coveredSessionIDs = Set(existingScores.map(\.sessionID))
+
+        var didInsert = false
+        for session in completedTemplateSessions {
+            guard let templateID = session.templateID,
+                  !coveredSessionIDs.contains(session.id) else { continue }
+            let score = TemplateWorkoutScore(
+                templateID: templateID,
+                templateName: session.label,
+                sessionID: session.id,
+                date: session.endedAt!,
+                totalVolume: totalVolumeInLbs(session: session)
+            )
+            modelContext.insert(score)
+            didInsert = true
+        }
+        if didInsert { try? modelContext.save() }
     }
 
     private var addButton: some View {
