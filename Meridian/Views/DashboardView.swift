@@ -95,7 +95,10 @@ struct DashboardView: View {
             addButton
         }
         .task { await loadHKWorkouts() }
-        .onAppear { cleanupOrphanedSessions() }
+        .onAppear {
+            cleanupOrphanedSessions()
+            backfillMissingScores()
+        }
         .sheet(isPresented: $showingAddSheet) {
             AddEntrySheet()
         }
@@ -144,6 +147,31 @@ struct DashboardView: View {
         for session in orphanedSessions {
             modelContext.delete(session)
         }
+    }
+
+    private func backfillMissingScores() {
+        guard let allSessions = try? modelContext.fetch(FetchDescriptor<WorkoutSession>()) else { return }
+        let completedTemplateSessions = allSessions.filter { $0.templateID != nil && $0.endedAt != nil }
+        guard !completedTemplateSessions.isEmpty else { return }
+
+        let existingScores = (try? modelContext.fetch(FetchDescriptor<TemplateWorkoutScore>())) ?? []
+        let coveredSessionIDs = Set(existingScores.map(\.sessionID))
+
+        var didInsert = false
+        for session in completedTemplateSessions {
+            guard let templateID = session.templateID,
+                  !coveredSessionIDs.contains(session.id) else { continue }
+            let score = TemplateWorkoutScore(
+                templateID: templateID,
+                templateName: session.label,
+                sessionID: session.id,
+                date: session.endedAt!,
+                totalVolume: totalVolumeInLbs(session: session)
+            )
+            modelContext.insert(score)
+            didInsert = true
+        }
+        if didInsert { try? modelContext.save() }
     }
 
     private var addButton: some View {
