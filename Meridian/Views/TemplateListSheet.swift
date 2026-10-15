@@ -6,7 +6,7 @@ struct TemplateListSheet: View {
     @Query(sort: \TemplateWorkoutScore.date, order: .reverse) private var scores: [TemplateWorkoutScore]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var editingTemplate: WorkoutTemplate? = nil
+    @State private var selectedTemplate: WorkoutTemplate? = nil
     @State private var showingNewTemplate = false
 
     /// Templates sorted: those with scores first (most recently used), then by creation date.
@@ -42,7 +42,7 @@ struct TemplateListSheet: View {
                     List {
                         ForEach(sortedTemplates) { template in
                             Button {
-                                editingTemplate = template
+                                selectedTemplate = template
                             } label: {
                                 TemplateTickerRow(template: template)
                             }
@@ -64,8 +64,8 @@ struct TemplateListSheet: View {
                     }
                 }
             }
-            .sheet(item: $editingTemplate) { t in
-                TemplateEditorSheet(template: t)
+            .sheet(item: $selectedTemplate) { t in
+                TemplateDetailSheet(template: t)
             }
             .sheet(isPresented: $showingNewTemplate) {
                 TemplateEditorSheet(template: nil)
