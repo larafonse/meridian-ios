@@ -30,6 +30,11 @@
 		527913F7C21ADF3D966BB552 /* MeridianApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E6F864BB785ABF392F7A92 /* MeridianApp.swift */; };
 		52C2D00493E7A01BBA87B1F4 /* StatItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE511C2DFA4552CA3A7BAC0 /* StatItemTests.swift */; };
 		558EC968FA92791674E1990B /* AddEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */; };
+		636750C62F5F4A899A246A76 /* AddMetricEntrySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2A8D91BF6B474E889C2780 /* AddMetricEntrySheet.swift */; };
+		E93C36C445ED4F4388F8E122 /* MetricLogSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBBAB3C42F4719BD56B799 /* MetricLogSheet.swift */; };
+		60C0B30E40C840809F92C9DC /* MetricChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6835A7B12F6A4C649AB39B43 /* MetricChartView.swift */; };
+		0B5A32BC094B44DE8674DDE3 /* MetricDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A2E4BCE94A4110B719E88C /* MetricDetailSheet.swift */; };
+		39B1D4C3073B4148A3C934D7 /* CreateMetricSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39A117B27AE46D7A332ECC1 /* CreateMetricSheet.swift */; };
 		5C29B1AD245F014381868829 /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6811A597323349D9F89251A0 /* WorkoutType.swift */; };
 		5D8B6A016D7E2EF557150F5D /* ActiveWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5313F27635FFA52368287DD3 /* ActiveWorkoutView.swift */; };
 		6113CD354C4367C438947EA9 /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF5E282FCCF33DB8A296BF3 /* RoutesView.swift */; };
@@ -101,6 +106,11 @@
 		6D5B4936D7FC4397B2B3B376 /* WorkoutRouteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRouteService.swift; sourceTree = "<group>"; };
 		73EFB0BADE44BAB86B9B774F /* RouteSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSyncService.swift; sourceTree = "<group>"; };
 		75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntrySheet.swift; sourceTree = "<group>"; };
+		9D2A8D91BF6B474E889C2780 /* AddMetricEntrySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMetricEntrySheet.swift; sourceTree = "<group>"; };
+		EDDBBAB3C42F4719BD56B799 /* MetricLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricLogSheet.swift; sourceTree = "<group>"; };
+		6835A7B12F6A4C649AB39B43 /* MetricChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricChartView.swift; sourceTree = "<group>"; };
+		84A2E4BCE94A4110B719E88C /* MetricDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricDetailSheet.swift; sourceTree = "<group>"; };
+		B39A117B27AE46D7A332ECC1 /* CreateMetricSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMetricSheet.swift; sourceTree = "<group>"; };
 		7B9967BBA3B244AF512A78BC /* WeightLogSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightLogSheet.swift; sourceTree = "<group>"; };
 		7FD3B907C34A780FED0255D7 /* Meridian.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Meridian.entitlements; sourceTree = "<group>"; };
 		837EE78770989EFA3E0CD2EE /* TemplateListSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListSheet.swift; sourceTree = "<group>"; };
@@ -241,6 +251,11 @@
 				EBD1E3859CB7A82FB07FF53D /* ActivitiesView.swift */,
 				8A65B0454BE5A2EDD08905EE /* ActivityRingsView.swift */,
 				75F5348AF3D70B1F75BC4527 /* AddEntrySheet.swift */,
+				9D2A8D91BF6B474E889C2780 /* AddMetricEntrySheet.swift */,
+				EDDBBAB3C42F4719BD56B799 /* MetricLogSheet.swift */,
+				6835A7B12F6A4C649AB39B43 /* MetricChartView.swift */,
+				84A2E4BCE94A4110B719E88C /* MetricDetailSheet.swift */,
+				B39A117B27AE46D7A332ECC1 /* CreateMetricSheet.swift */,
 				D5A8E3F61C490B72E837D910 /* CardEditorSheet.swift */,
 				F2014C059C12A72AA1C0083D /* ContentView.swift */,
 				62DB356B259500A68AF084EF /* DashboardView.swift */,
@@ -389,6 +404,11 @@
 				0F0ABBB1EF3E925EE1ABE470 /* ActivityService.swift in Sources */,
 				4AE3A5EDB251FDC5733EF7DC /* ActivitySummary.swift in Sources */,
 				558EC968FA92791674E1990B /* AddEntrySheet.swift in Sources */,
+				636750C62F5F4A899A246A76 /* AddMetricEntrySheet.swift in Sources */,
+				E93C36C445ED4F4388F8E122 /* MetricLogSheet.swift in Sources */,
+				60C0B30E40C840809F92C9DC /* MetricChartView.swift in Sources */,
+				0B5A32BC094B44DE8674DDE3 /* MetricDetailSheet.swift in Sources */,
+				39B1D4C3073B4148A3C934D7 /* CreateMetricSheet.swift in Sources */,
 				C8C380C45E31114950096E0B /* ContentView.swift in Sources */,
 				2A1F11AA91110C7E605272D9 /* DashboardView.swift in Sources */,
 				3751B81D85B4108EE6CDBC27 /* HealthKitWorkoutService.swift in Sources */,
