@@ -151,6 +151,8 @@ struct DashboardView: View {
                 WeightDetailSheet()
             case .template(let template):
                 TemplateDetailSheet(template: template)
+            case .metric:
+                EmptyView()
             }
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {

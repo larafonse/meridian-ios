@@ -12,6 +12,7 @@ struct StatItem: Identifiable {
 enum StatDetail {
     case template(WorkoutTemplate)
     case weight
+    case metric(Metric)
 }
 
 // MARK: - Weight builder
@@ -37,6 +38,46 @@ extension StatItem {
         }()
         return StatItem(id: weightID, ticker: "WGHT", name: "Body Weight",
                         sparklineData: sparkline, latestValue: latestValue, detail: .weight)
+    }
+}
+
+// MARK: - Metric builder
+
+extension StatItem {
+    private static let metricDecimalFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 1
+        f.maximumFractionDigits = 1
+        f.locale = Locale(identifier: "en_US")
+        return f
+    }()
+
+    private static let metricIntegerFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 0
+        f.locale = Locale(identifier: "en_US")
+        return f
+    }()
+
+    static func forMetric(_ metric: Metric, entries: [MetricEntry]) -> StatItem {
+        let sorted = entries.sorted { $0.recordedAt < $1.recordedAt }
+        let raw = Array(sorted.suffix(10).map { $0.value })
+        let sparkline: [Double] = raw.isEmpty ? [0, 0] : (raw.count == 1 ? [0] + raw : raw)
+        let formatter = metric.valueType == .decimal ? metricDecimalFormatter : metricIntegerFormatter
+        let latestValue: String = {
+            guard let last = sorted.last else { return "--" }
+            let formatted = formatter.string(from: NSNumber(value: last.value)) ?? "\(last.value)"
+            return "\(formatted) \(metric.unit)"
+        }()
+        return StatItem(
+            id: metric.id,
+            ticker: tickerSymbol(for: metric.name),
+            name: metric.name,
+            sparklineData: sparkline,
+            latestValue: latestValue,
+            detail: .metric(metric)
+        )
     }
 }
 
