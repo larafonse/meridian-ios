@@ -5,7 +5,7 @@ import SwiftData
 struct MeridianApp: App {
     // Declared static so it can be referenced in the @StateObject initializer
     private static let sharedContainer: ModelContainer = {
-        try! ModelContainer(for: WeightEntry.self, WorkoutSession.self, Exercise.self, WorkoutSet.self, WorkoutTemplate.self, TemplateExercise.self, TemplateWorkoutScore.self, DashboardCard.self)
+        try! ModelContainer(for: WeightEntry.self, WorkoutSession.self, Exercise.self, WorkoutSet.self, WorkoutTemplate.self, TemplateExercise.self, TemplateWorkoutScore.self, DashboardCard.self, Metric.self, MetricEntry.self)
     }()
 
     @StateObject private var linker = WorkoutLinkerService(modelContainer: sharedContainer)

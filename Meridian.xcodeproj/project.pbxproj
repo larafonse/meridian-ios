@@ -60,6 +60,8 @@
 		F50607212D9710F4371ED211 /* SparklineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08614D68B6EEED590EEB4649 /* SparklineView.swift */; };
 		FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B82395EF2A3509D357589C5 /* WeightStats.swift */; };
 		FF48F34B0969A6CA99220549 /* WorkoutSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEAA79051486999B45C8259 /* WorkoutSessionTests.swift */; };
+		C1FD326A4C0E47EFA4BB10C2 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7CD8D1EE074E438FFED562 /* Metric.swift */; };
+		735CD951665F4BE5A1D6DBF5 /* MetricEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60AA7B804B44A619E9E73FD /* MetricEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +132,8 @@
 		F2014C059C12A72AA1C0083D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F8D91AD1C2423A0DC7E039DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F93370E2F6699A9D8723D77A /* StatsPortfolioCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsPortfolioCard.swift; sourceTree = "<group>"; };
+		7B7CD8D1EE074E438FFED562 /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
+		B60AA7B804B44A619E9E73FD /* MetricEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -214,6 +218,8 @@
 				51D275890F2B0CDFAC342FA4 /* StatItem.swift */,
 				AD3D8A80946F7EA199F52D08 /* TemplateWorkoutScore.swift */,
 				9B923C32F6C5DFF2E4D4C013 /* WeightEntry.swift */,
+				7B7CD8D1EE074E438FFED562 /* Metric.swift */,
+				B60AA7B804B44A619E9E73FD /* MetricEntry.swift */,
 				C5ED1F73A8F291119FD37BAC /* WorkoutSession.swift */,
 				000D085771CDB27AE2B446E3 /* WorkoutTemplate.swift */,
 				6811A597323349D9F89251A0 /* WorkoutType.swift */,
@@ -398,6 +404,8 @@
 				C65D14DB28F8ECE0998206EE /* WeightChartView.swift in Sources */,
 				8845B788310BA6CEEECB80A5 /* WeightDetailSheet.swift in Sources */,
 				B7A686D4F6FC1F51851833DB /* WeightEntry.swift in Sources */,
+				C1FD326A4C0E47EFA4BB10C2 /* Metric.swift in Sources */,
+				735CD951665F4BE5A1D6DBF5 /* MetricEntry.swift in Sources */,
 				1D7AB5E8DAEC4A8B6A89B806 /* WeightLogSheet.swift in Sources */,
 				FE479ED7248573DB0F3A5165 /* WeightStats.swift in Sources */,
 				34415A914025B3152D19E506 /* WorkoutHistorySheet.swift in Sources */,
