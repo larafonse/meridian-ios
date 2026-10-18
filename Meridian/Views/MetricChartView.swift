@@ -160,13 +160,17 @@ struct MetricChartView: View {
         return "\(prefix)\(formatted(v)) \(unit)"
     }
 
+    private static let decimalFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.minimumFractionDigits = 1
+        f.maximumFractionDigits = 1
+        return f
+    }()
+
     private func formatted(_ value: Double) -> String {
         if metric.valueType == .integer {
             return "\(Int(value.rounded()))"
         }
-        let f = NumberFormatter()
-        f.minimumFractionDigits = 1
-        f.maximumFractionDigits = 1
-        return f.string(from: NSNumber(value: value)) ?? "\(value)"
+        return Self.decimalFormatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
 }

@@ -6,7 +6,9 @@ struct MetricDetailSheet: View {
 
     @Query private var entries: [MetricEntry]
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @State private var showingLog = false
+    @State private var showingDeleteConfirm = false
 
     init(metric: Metric) {
         self.metric = metric
@@ -34,10 +36,27 @@ struct MetricDetailSheet: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Log") { showingLog = true }
                 }
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(role: .destructive) {
+                        showingDeleteConfirm = true
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                }
             }
         }
         .sheet(isPresented: $showingLog) {
             MetricLogSheet(metric: metric)
+        }
+        .confirmationDialog("Delete \(metric.name)?", isPresented: $showingDeleteConfirm, titleVisibility: .visible) {
+            Button("Delete Metric", role: .destructive) {
+                modelContext.delete(metric)
+                try? modelContext.save()
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will permanently delete all \(metric.name) entries.")
         }
     }
 }
