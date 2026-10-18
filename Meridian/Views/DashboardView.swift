@@ -11,7 +11,10 @@ struct DashboardView: View {
     @Query(sort: \WorkoutTemplate.createdAt, order: .forward) private var templates: [WorkoutTemplate]
     @Query(filter: #Predicate<WorkoutSession> { $0.endedAt == nil }) private var orphanedSessions: [WorkoutSession]
     @Query(sort: \DashboardCard.sortOrder, order: .forward) private var dashboardCards: [DashboardCard]
+    @Query(sort: \Metric.sortOrder, order: .forward) private var metrics: [Metric]
+    @Query private var allMetricEntries: [MetricEntry]
     @State private var showingStartWorkout = false
+    @State private var showingCreateMetric = false
     @State private var showingActiveWorkout = false
     @State private var showingTemplates = false
     @State private var selectedStat: StatItem? = nil
@@ -42,14 +45,20 @@ struct DashboardView: View {
         }
 
         let templateItems = topTemplates.map { StatItem.forTemplate($0, scores: allScores) }
-        return [weightItem] + templateItems
+        let metricItems = metrics.map { m in
+            StatItem.forMetric(m, entries: allMetricEntries.filter { $0.metricID == m.id })
+        }
+        return [weightItem] + templateItems + metricItems
     }
 
     // All available stats — used for the card editor and resolving custom card items
     private var allStatItems: [StatItem] {
         let weightItem = StatItem.forWeight(entries: Array(entries))
         let templateItems = templates.map { StatItem.forTemplate($0, scores: allScores) }
-        return [weightItem] + templateItems
+        let metricItems = metrics.map { m in
+            StatItem.forMetric(m, entries: allMetricEntries.filter { $0.metricID == m.id })
+        }
+        return [weightItem] + templateItems + metricItems
     }
 
     private func items(for card: DashboardCard) -> [StatItem] {
@@ -120,6 +129,8 @@ struct DashboardView: View {
                         onTapStat: { selectedStat = $0 }
                     )
 
+                    addMetricButton
+
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -151,9 +162,12 @@ struct DashboardView: View {
                 WeightDetailSheet()
             case .template(let template):
                 TemplateDetailSheet(template: template)
-            case .metric:
-                EmptyView()
+            case .metric(let m):
+                MetricDetailSheet(metric: m)
             }
+        }
+        .sheet(isPresented: $showingCreateMetric) {
+            CreateMetricSheet(nextSortOrder: (metrics.map(\.sortOrder).max() ?? -1) + 1)
         }
         .sheet(isPresented: $showingStartWorkout, onDismiss: {
             if activeWorkout != nil { showingActiveWorkout = true }
@@ -271,5 +285,31 @@ struct DashboardView: View {
         }
         .padding(.trailing, 24)
         .padding(.bottom, 24)
+    }
+
+    private var addMetricButton: some View {
+        Button {
+            showingCreateMetric = true
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "plus")
+                    .font(.system(size: 12, weight: .semibold))
+                Text("Add Metric")
+                    .font(.system(size: 13, weight: .semibold))
+            }
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color.white.opacity(0.5))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                        Color(red: 0.898, green: 0.898, blue: 0.898),
+                        style: StrokeStyle(lineWidth: 1, dash: [6, 4])
+                    )
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
