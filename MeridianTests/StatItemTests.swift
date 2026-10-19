@@ -62,6 +62,55 @@ struct StatItemTests {
         #expect(item.id == template.id)
     }
 
+    // MARK: forMetric
+
+    private func makeMetric(name: String, valueType: ValueType = .decimal, unit: String = "mmHg") -> Metric {
+        Metric(name: name, valueType: valueType, unit: unit, sortOrder: 0)
+    }
+
+    private func makeMetricEntry(metric: Metric, value: Double, daysAgo: Int = 0) -> MetricEntry {
+        let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: .now)!
+        return MetricEntry(metric: metric, value: value, recordedAt: date)
+    }
+
+    @Test("forMetric ticker uses tickerSymbol for multi-word name")
+    func metricTickerMultiWord() {
+        let m = makeMetric(name: "Blood Pressure")
+        #expect(StatItem.forMetric(m, entries: []).ticker == "BP")
+    }
+
+    @Test("forMetric ticker for short single-word name is not padded")
+    func metricTickerShortName() {
+        let m = makeMetric(name: "HR")
+        #expect(StatItem.forMetric(m, entries: []).ticker == "HR")
+    }
+
+    @Test("forMetric latestValue is double dash when no entries")
+    func metricLatestValueEmpty() {
+        let m = makeMetric(name: "Weight", unit: "lbs")
+        #expect(StatItem.forMetric(m, entries: []).latestValue == "--")
+    }
+
+    @Test("forMetric latestValue formatted for decimal metric with 1 decimal place")
+    func metricLatestValueDecimal() {
+        let m = makeMetric(name: "Weight", valueType: .decimal, unit: "lbs")
+        let entry = makeMetricEntry(metric: m, value: 182.5)
+        #expect(StatItem.forMetric(m, entries: [entry]).latestValue == "182.5 lbs")
+    }
+
+    @Test("forMetric latestValue formatted for integer metric with no decimal")
+    func metricLatestValueInteger() {
+        let m = makeMetric(name: "Systolic", valueType: .integer, unit: "mmHg")
+        let entry = makeMetricEntry(metric: m, value: 120.0)
+        #expect(StatItem.forMetric(m, entries: [entry]).latestValue == "120 mmHg")
+    }
+
+    @Test("forMetric id matches metric id")
+    func metricIDMatchesMetric() {
+        let m = makeMetric(name: "Systolic")
+        #expect(StatItem.forMetric(m, entries: []).id == m.id)
+    }
+
     @Test("forTemplate filters scores by templateID")
     func templateFiltersScores() {
         let t1 = WorkoutTemplate(name: "Alpha", workoutType: "strength", workoutTypeDisplayName: "Strength")
